@@ -1,0 +1,21 @@
+# The ACME Security information.
+
+# Contact
+Contact: mailto:security@example.com
+Contact: tel:+1-201-555-0123
+Contact: https://example.com/security-contact.html
+
+#Example of a PGP key available from a web server:
+Encryption: https://example.com/pgp-key.txt
+
+#Example of a PGP key available from an OPENPGPKEY DNS record under “security@example.com” (as per [RFC7553] and [RFC7929]):
+Encryption: dns:5d2d3ceb7abe552344276d47d36._openpgpkey.example.com?type=OPENPGPKEY
+
+Signature: https://example.com/.well-known/security.txt.sig
+
+Policy: https://example.com/security-policy.html
+
+Acknowledgments: https://example.com/hall-of-fame.html
+
+# The “Hiring” directive is for linking to the vendor’s security-related job positions.
+Hiring: https://example.com/jobs.html

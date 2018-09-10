@@ -1,0 +1,9 @@
+﻿<SolutionConfiguration>
+  <Settings>
+    <AllowParallelTestExecution>True</AllowParallelTestExecution>
+    <SolutionConfigured>True</SolutionConfigured>
+	<IgnoredTests>
+      
+    </IgnoredTests>
+  </Settings>
+</SolutionConfiguration>
