@@ -55,14 +55,14 @@ namespace CHG.Extensions.Security.Txt.Tests
                 _container.Introduction = "The ACME Security information.";
                 _container.Permission = "none";
 
-                _container.Build().Should().Be(@"# The ACME Security information.
-Contact: mailto:security@example.com
-Encryption: https://example.com/pgp-key.txt
-Signature: https://example.com/.well-known/security.txt.sig
-Policy: https://example.com/security-policy.html
-Acknowledgments: https://example.com/hall-of-fame.html
-Hiring: https://example.com/jobs.html
-Permission: none");
+                _container.Build().Should().Be("# The ACME Security information." + Environment.NewLine +
+"Contact: mailto:security@example.com" + Environment.NewLine +
+"Encryption: https://example.com/pgp-key.txt" + Environment.NewLine +
+"Signature: https://example.com/.well-known/security.txt.sig" + Environment.NewLine +
+"Policy: https://example.com/security-policy.html" + Environment.NewLine +
+"Acknowledgments: https://example.com/hall-of-fame.html" + Environment.NewLine +
+"Hiring: https://example.com/jobs.html" + Environment.NewLine +
+"Permission: none");
             }
         }
 
