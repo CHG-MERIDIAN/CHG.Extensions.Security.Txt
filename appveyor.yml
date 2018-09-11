@@ -43,4 +43,4 @@ for:
   - provider: NuGet
     artifact: /NuGet/
     api_key:
-      secure: aKEM7TDQre/3wcnY5Kg4MKic5/T9yXTnUX8h9/iCwJSuHZFMH4meaj/faGcW8wl2
+      secure: pybRcci/MAriwLJ1paEYvUrK8vh61SG0T2bGwFA8k4ebYE/CaqoGRn9KsfvDd6zL
