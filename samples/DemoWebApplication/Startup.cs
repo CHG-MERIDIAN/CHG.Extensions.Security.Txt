@@ -32,6 +32,11 @@ namespace DemoWebApplication
             services.AddSecurityText(builder => builder.ReadFromFile(Environment.WebRootFileProvider.GetFileInfo("companySecurityinfo.txt")));
 
             services.AddSecurityText(builder => builder.ReadFromConfiguration(Configuration.GetSection("SecurityText")));
+
+            services.AddSecurityText(builder => { builder
+                .SetContact("mailto:security@example.com")
+                .SetPolicy("https://example.com/security-policy.html");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

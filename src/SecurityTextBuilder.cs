@@ -108,6 +108,15 @@ namespace CHG.Extensions.Security.Txt
         }
 
         /// <summary>
+        /// Disables the value validation
+        /// </summary>
+        /// <returns></returns>
+        public SecurityTextBuilder DisableValidation()
+        {
+            return SetValidateValues(false);
+        }
+
+        /// <summary>
         /// Sets the value for Contact.
         /// </summary>
         /// <param name="value">The value.</param>
