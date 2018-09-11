@@ -1,10 +1,14 @@
 # CHG.Extensions.Security.Txt
+
+[![Build status](https://ci.appveyor.com/api/projects/status/852syrpnhad01ghq?svg=true)](https://ci.appveyor.com/project/CHG-MERIDIAN/chg-extensions-security-txt)
+[![NuGet Version](http://img.shields.io/nuget/v/CHG.Extensions.Security.Txt.svg?style=flat)](https://www.nuget.org/packages/CHG.Extensions.Security.Txt/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Provides a middleware to represent the "security.txt" for ASP.NET Core applications. Security.txt is a proposed standard which allows websites to define security policies, more details see [https://securitytxt.org/](https://securitytxt.org/).
 
 The security.txt page will be shown under `/.well-known/security.txt`. Optionally, the url `/security.txt` will be redirected to the main url.
 
 ## Usage
-Install the NuGet package `CHG.Extensions.Security.Txt`. 
+Install the NuGet package `CHG.Extensions.Security.Txt`.
 There are 3 ways the content of the security.txt can be defined.
 
 ```CSharp
@@ -63,7 +67,6 @@ The json configuration file should look like:
 
 ```json
 {
- ...
   "SecurityText": {
     "Introduction": "The ACME Security information.",
     "Contact": "mailto:security@example.com;tel:+1-201-555-0123",

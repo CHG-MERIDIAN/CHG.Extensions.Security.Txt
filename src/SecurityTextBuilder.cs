@@ -3,7 +3,6 @@ using System.IO;
 using System.Text;
 using CHG.Extensions.Security.Txt.Internal;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Logging;
 
 namespace CHG.Extensions.Security.Txt
 {

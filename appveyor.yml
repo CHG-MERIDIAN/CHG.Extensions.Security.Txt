@@ -1,0 +1,46 @@
+image: Visual Studio 2017
+
+#---------------------------------#
+#  Build Script                   #
+#---------------------------------#
+build_script:
+  - ps: .\build.ps1 -Target Test
+
+# Tests
+test: off
+
+artifacts:
+- path: buildArtifacts\Nuget\*.nupkg
+  name: NuGet package
+
+#---------------------------------#
+#        Branches to build        #
+#---------------------------------#
+branches:
+  # Whitelist
+  only:
+    - develop
+    - master
+    - /release/.*/
+    - /hotfix/.*/
+
+#---------------------------------#
+#  Build Cache                    #
+#---------------------------------#
+cache:   
+- tools -> build.cake
+
+# here we are going to override common configuration
+for:
+# master branch
+-
+  branches:
+    only:
+      - master  
+  build_script:
+  - ps: .\build.ps1 -Target Pack
+  deploy:
+  - provider: NuGet
+    artifact: /NuGet/
+    api_key:
+      secure: aKEM7TDQre/3wcnY5Kg4MKic5/T9yXTnUX8h9/iCwJSuHZFMH4meaj/faGcW8wl2
