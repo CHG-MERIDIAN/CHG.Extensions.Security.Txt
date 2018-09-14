@@ -100,3 +100,6 @@ public void ConfigureServices(IServiceCollection services)
 ### Validation
 
 Per default all values (except when given via file) will be validated. The validation can be disabled either via the `ValidateValues` configuration key when using config file or via the `DisableValidation` method.
+
+## Code of Conduct
+This project and everyone participating in it is governed by the [CHG-MERIDIAN Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code. Please report unacceptable behavior to developers@chg-meridian.com.
