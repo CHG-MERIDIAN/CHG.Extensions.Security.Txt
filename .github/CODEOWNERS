@@ -1,0 +1,6 @@
+# This file defines which part of this project is owned by a team member
+
+# source code, tests, and samples
+/src/ @twenzel
+/tests/ @twenzel
+/samples/ @twenzel
