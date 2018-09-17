@@ -12,6 +12,11 @@ test: off
 artifacts:
 - path: buildArtifacts\Nuget\*.nupkg
   name: NuGet package
+  
+ skip_commits:
+  files:
+    - .github/*
+    - '**/*.md'
 
 #---------------------------------#
 #        Branches to build        #
