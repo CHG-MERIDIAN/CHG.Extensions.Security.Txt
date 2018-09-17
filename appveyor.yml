@@ -13,9 +13,9 @@ artifacts:
 - path: buildArtifacts\Nuget\*.nupkg
   name: NuGet package
   
- skip_commits:
+skip_commits:
   files:
-    - .github/*
+    - '.github/'
     - '**/*.md'
 
 #---------------------------------#
