@@ -4,6 +4,10 @@ about: Suggest an idea for this project
 
 ---
 
+**Please note by far the quickest way to get a new feature is to file a Pull Request.**
+
+We will consider your request but it may be closed if it's something we're not actively planning to work on.
+
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
 
