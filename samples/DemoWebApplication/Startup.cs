@@ -15,9 +15,6 @@ namespace DemoWebApplication
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IHostingEnvironment Environment { get; }
-
         public Startup(IConfiguration configuration, IHostingEnvironment environment)
         {
             Configuration = configuration;
@@ -55,5 +52,9 @@ namespace DemoWebApplication
             app.UseSecurityText();
             app.UseMvc();
         }
-    }
+
+		public IConfiguration Configuration { get; }
+
+		public IHostingEnvironment Environment { get; }
+	}
 }

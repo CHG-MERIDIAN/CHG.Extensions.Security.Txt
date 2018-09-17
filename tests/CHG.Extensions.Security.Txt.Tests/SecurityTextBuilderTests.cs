@@ -87,13 +87,13 @@ namespace CHG.Extensions.Security.Txt.Tests
                 {
                     File.WriteAllText(fileName, expected);
 
-                    _builder.ReadFromFile(fileName);
+					_builder.ReadFromFile(fileName);
 
                     _builder.GetContainer().Build().Should().Be(expected);
                 }
                 finally
                 {
-                    @File.Delete(fileName);
+                    File.Delete(fileName);
                 }
             }
         }       

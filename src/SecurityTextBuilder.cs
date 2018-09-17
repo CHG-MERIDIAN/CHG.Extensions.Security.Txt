@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using CHG.Extensions.Security.Txt.Internal;
 using Microsoft.Extensions.FileProviders;
 
@@ -24,7 +23,7 @@ namespace CHG.Extensions.Security.Txt
                 throw new ArgumentNullException(nameof(fileInfo));
 
             if (!fileInfo.Exists)
-                throw new ArgumentException($"Defined file {fileInfo.PhysicalPath} does not exists.", nameof(fileInfo));
+                throw new ArgumentException($"Defined file {fileInfo.PhysicalPath} does not exist.", nameof(fileInfo));
 
             // StreamReader disposes the stream also
             using(var reader = new StreamReader(fileInfo.CreateReadStream()))
@@ -44,7 +43,7 @@ namespace CHG.Extensions.Security.Txt
             var fileInfo = new System.IO.FileInfo(filePath);
 
             if (!fileInfo.Exists)
-                throw new ArgumentException($"Defined file {fileInfo.Name} does not exists.", nameof(filePath));
+                throw new ArgumentException($"Defined file {fileInfo.Name} does not exist.", nameof(filePath));
 
             using (var stream = fileInfo.OpenText())
                 ReadFromFile(stream);

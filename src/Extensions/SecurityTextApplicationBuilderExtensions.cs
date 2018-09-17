@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CHG.Extensions.Security.Txt;
 using CHG.Extensions.Security.Txt.Internal;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -41,13 +37,15 @@ namespace Microsoft.AspNetCore.Builder
             var container = app.ApplicationServices.GetService<SecurityTextContainer>();
 
             if (container == null)
-                throw new InvalidOperationException($"Please call {nameof(SecurityTextServiceCollectionExtensions.AddSecurityText)}() within ConfigureServices() first, bevor using {nameof(UseSecurityText)}()!");
+                throw new InvalidOperationException($"Please call {nameof(SecurityTextServiceCollectionExtensions.AddSecurityText)}() within ConfigureServices() first, before using {nameof(UseSecurityText)}()!");
 
             if (container.ValidateValues)
                 container.Validate();
 
-            app.Map(MAIN_URL, builder => {
-                builder.Run(async context => {
+            app.Map(MAIN_URL, builder =>
+			{
+                builder.Run(async context =>
+				{
                     context.Response.ContentType = "text/plain";
                     await context.Response.WriteAsync(container.Build());
                 });
@@ -55,8 +53,10 @@ namespace Microsoft.AspNetCore.Builder
 
             if (registerRedirect)
             {
-                app.Map(FALLBACK_URL, builder => {
-                    builder.Run(async context => {
+                app.Map(FALLBACK_URL, builder =>
+				{
+                    builder.Run(async context =>
+					{
                         context.Response.Redirect(MAIN_URL, true);
                         await context.Response.WriteAsync(container.Build());
                     });

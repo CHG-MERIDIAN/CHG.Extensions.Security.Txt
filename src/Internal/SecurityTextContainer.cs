@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace CHG.Extensions.Security.Txt.Internal
@@ -9,64 +10,6 @@ namespace CHG.Extensions.Security.Txt.Internal
 	public class SecurityTextContainer
 	{
 		private const string COMMENT_PREFIX = "# ";
-
-		/// <summary>
-		/// Gets or sets the whole security text.
-		/// </summary>
-		public string Text { get; set; }
-
-		/// <summary>
-		/// Gets or sets the contact information.        
-		/// </summary>
-		/// <example>mailto:security@example.com or tel:+1-201-555-0123 or https://example.com/security-contact.html</example>        
-		public string Contact { get; set; }
-
-		/// <summary>
-		/// Gets or sets the encryption information.
-		/// </summary>
-		/// <example>https://example.com/pgp-key.txt</example>
-		public string Encryption { get; set; }
-
-		/// <summary>
-		/// Gets or sets the hiring directive, this is for linking to the vendor’s security-related job positions..
-		/// </summary>
-		/// <example>https://example.com/jobs.html</example>
-		public string Hiring { get; set; }
-
-		/// <summary>
-		/// Gets or sets the permission directive,  this field MUST have a value which is REQUIRED to be set to the string "none".
-		/// </summary>
-		/// <example>none</example>
-		public string Permission { get; set; }
-
-		/// <summary>
-		/// Gets or sets the acknowledgments.
-		/// </summary>
-		/// <example>https://example.com/hall-of-fame.html</example>
-		public string Acknowledgments { get; set; }
-
-		/// <summary>
-		/// Gets or sets the policy.
-		/// </summary>        
-		/// <example>https://example.com/security-policy.html</example>
-		public string Policy { get; set; }
-
-		/// <summary>
-		/// Gets or sets the signature.
-		/// </summary>
-		/// <example>https://example.com/.well-known/security.txt.sig</example>
-		public string Signature { get; set; }
-
-		/// <summary>
-		/// Gets or sets the introduction.
-		/// </summary>
-		/// <example>The ACME Security information.</example>
-		public string Introduction { get; set; }
-
-		/// <summary>
-		/// Gets or sets whether the values should be validated
-		/// </summary>
-		public bool ValidateValues { get; set; } = true;
 
 		/// <summary>
 		/// Builds the security information text
@@ -144,7 +87,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateAcknowledgments()
 		{
-			CheckValidUrl(Acknowledgments, nameof(Acknowledgments));
+			ValidateUrl(Acknowledgments, nameof(Acknowledgments));
 		}
 
 		/// <summary>
@@ -152,7 +95,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateEncryption()
 		{
-			ValidateUri(Encryption, nameof(Encryption), true);
+			ValidateUri(Encryption, nameof(Encryption));
 		}
 
 		/// <summary>
@@ -160,7 +103,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateHiring()
 		{
-			ValidateUri(Hiring, nameof(Hiring), false);
+			ValidateUri(Hiring, nameof(Hiring), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -168,7 +111,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidatePolicy()
 		{
-			ValidateUri(Policy, nameof(Policy), false);
+			ValidateUri(Policy, nameof(Policy), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -176,15 +119,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateSignature()
 		{
-			ValidateUri(Signature, nameof(Signature), false);
-		}
-
-		private void ValidateUri(string value, string fieldName, bool allowAllUriSchemes)
-		{
-			CheckValidUri(value, fieldName, allowAllUriSchemes);
-
-			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !IsValidInternetUrl(value, false))
-				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid url! It must be begin with \"https://\".");
+			ValidateUri(Signature, nameof(Signature), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -212,8 +147,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		{
 			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase))
 			{
-				if (!IsValidInternetUrl(value, false))
-					throw new InvalidSecurityInformationException($"The value '{value}' for the {nameof(Contact)} field is not a valid url! It must be begin with \"https://\".");
+				if (!IsValidUrl(value, UriValidationOptions.RequiresSecureScheme))
+					throw new InvalidSecurityInformationException($"The value '{value}' for the {nameof(Contact)} field is not a valid url! It must begin with \"https://\".");
 			}
 			else if (value.Contains("@") || value.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
 			{
@@ -228,40 +163,42 @@ namespace CHG.Extensions.Security.Txt.Internal
 			}
 		}
 
-		private void CheckValidUrl(string value, string fieldName)
+		private void ValidateUri(string value, string fieldName, params string[] uriSchemeRestriction)
 		{
-			if (!IsValidInternetUrl(value, true))
-				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field, is not a valid url!");
+			if (!IsValidUri(value, uriSchemeRestriction))
+				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid uri!");
+
+			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !IsValidUrl(value, UriValidationOptions.RequiresSecureScheme))
+				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid url! It must be begin with \"https://\".");
 		}
 
-		private void CheckValidUri(string value, string fieldName, bool allowAllUriSchemes)
-		{
-			if (!IsValidUri(value, allowAllUriSchemes))
-				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field, is not a valid uri!");
-		}
-
-		private bool IsValidInternetUrl(string value, bool allowNonSecureScheme)
+		private bool IsValidUri(string value, params string[] uriSchemeRestriction)
 		{
 			if (Uri.TryCreate(value, UriKind.Absolute, out var validatedUri))
 			{
-				return (allowNonSecureScheme && validatedUri.Scheme == Uri.UriSchemeHttp) || validatedUri.Scheme == Uri.UriSchemeHttps;
+				if (uriSchemeRestriction?.Length == 0)
+					return true;
+
+				return uriSchemeRestriction.Contains(validatedUri.Scheme);
 			}
 
 			return false;
 		}
 
-		private bool IsValidUri(string value, bool allowAllUriSchemes)
+		private void ValidateUrl(string value, string fieldName)
+		{
+			if (!IsValidUrl(value, UriValidationOptions.AllowUnsecureScheme))
+				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid url!");
+		}
+
+		private bool IsValidUrl(string value, UriValidationOptions options)
 		{
 			if (Uri.TryCreate(value, UriKind.Absolute, out var validatedUri))
 			{
-				return allowAllUriSchemes ||
-					validatedUri.Scheme == Uri.UriSchemeFile ||
-					validatedUri.Scheme == Uri.UriSchemeFtp ||
-					validatedUri.Scheme == Uri.UriSchemeGopher ||
-					validatedUri.Scheme == Uri.UriSchemeHttp ||
-					validatedUri.Scheme == Uri.UriSchemeHttps ||
-					validatedUri.Scheme == Uri.UriSchemeNetPipe ||
-					validatedUri.Scheme == Uri.UriSchemeNetTcp;
+				if (options == UriValidationOptions.AllowUnsecureScheme)
+					return validatedUri.Scheme == Uri.UriSchemeHttp || validatedUri.Scheme == Uri.UriSchemeHttps;
+
+				return validatedUri.Scheme == Uri.UriSchemeHttps;
 			}
 
 			return false;
@@ -271,10 +208,11 @@ namespace CHG.Extensions.Security.Txt.Internal
 		{
 			if (email.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
 				email = email.Substring(7);
+
 			try
 			{
-				var addr = new System.Net.Mail.MailAddress(email);
-				return addr != null;
+				var address = new System.Net.Mail.MailAddress(email);
+				return address != null;
 			}
 			catch
 			{
@@ -309,5 +247,64 @@ namespace CHG.Extensions.Security.Txt.Internal
 
 			return builder.ToString();
 		}
+
+		/// <summary>
+		/// Gets or sets the whole security text.
+		/// </summary>
+		public string Text { get; set; }
+
+		/// <summary>
+		/// Gets or sets the contact information.        
+		/// </summary>
+		/// <example>mailto:security@example.com or tel:+1-201-555-0123 or https://example.com/security-contact.html</example>        
+		public string Contact { get; set; }
+
+		/// <summary>
+		/// Gets or sets the encryption information.
+		/// </summary>
+		/// <example>https://example.com/pgp-key.txt</example>
+		public string Encryption { get; set; }
+
+		/// <summary>
+		/// Gets or sets the hiring directive, this is for linking to the vendor’s security-related job positions..
+		/// </summary>
+		/// <example>https://example.com/jobs.html</example>
+		public string Hiring { get; set; }
+
+		/// <summary>
+		/// Gets or sets the permission directive,  this field MUST have a value which is REQUIRED to be set to the string "none".
+		/// </summary>
+		/// <example>none</example>
+		public string Permission { get; set; }
+
+		/// <summary>
+		/// Gets or sets the acknowledgments.
+		/// </summary>
+		/// <example>https://example.com/hall-of-fame.html</example>
+		public string Acknowledgments { get; set; }
+
+		/// <summary>
+		/// Gets or sets the policy.
+		/// </summary>        
+		/// <example>https://example.com/security-policy.html</example>
+		public string Policy { get; set; }
+
+		/// <summary>
+		/// Gets or sets the signature.
+		/// </summary>
+		/// <example>https://example.com/.well-known/security.txt.sig</example>
+		public string Signature { get; set; }
+
+		/// <summary>
+		/// Gets or sets the introduction.
+		/// </summary>
+		/// <example>The ACME Security information.</example>
+		public string Introduction { get; set; }
+
+		/// <summary>
+		/// Gets or sets whether the values should be validated
+		/// </summary>
+		public bool ValidateValues { get; set; } = true;
+
 	}
 }
