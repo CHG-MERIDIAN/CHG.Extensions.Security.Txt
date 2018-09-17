@@ -147,7 +147,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		{
 			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase))
 			{
-				if (!isValidUrl(value, UriValidationOptions.RequiresSecureScheme))
+				if (!IsValidUrl(value, UriValidationOptions.RequiresSecureScheme))
 					throw new InvalidSecurityInformationException($"The value '{value}' for the {nameof(Contact)} field is not a valid url! It must begin with \"https://\".");
 			}
 			else if (value.Contains("@") || value.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
@@ -168,7 +168,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 			if (!IsValidUri(value, uriSchemeRestriction))
 				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid uri!");
 
-			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !isValidUrl(value, UriValidationOptions.RequiresSecureScheme))
+			if (value.StartsWith("http", StringComparison.OrdinalIgnoreCase) && !IsValidUrl(value, UriValidationOptions.RequiresSecureScheme))
 				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid url! It must be begin with \"https://\".");
 		}
 
@@ -187,11 +187,11 @@ namespace CHG.Extensions.Security.Txt.Internal
 
 		private void ValidateUrl(string value, string fieldName)
 		{
-			if (!isValidUrl(value, UriValidationOptions.AllowUnsecureScheme))
+			if (!IsValidUrl(value, UriValidationOptions.AllowUnsecureScheme))
 				throw new InvalidSecurityInformationException($"The value '{value}' for the {fieldName} field is not a valid url!");
 		}
 
-		private bool isValidUrl(string value, UriValidationOptions options)
+		private bool IsValidUrl(string value, UriValidationOptions options)
 		{
 			if (Uri.TryCreate(value, UriKind.Absolute, out var validatedUri))
 			{
