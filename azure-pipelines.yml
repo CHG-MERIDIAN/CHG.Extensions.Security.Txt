@@ -7,11 +7,15 @@ pool:
   vmImage: 'VS2017-Win2016'
 
 variables:
-  buildConfiguration: 'Release'
+  buildTarget: 'Test'
 
 steps:
-- task: PowerShell@2
-  inputs: .\build.ps1 -Target Test
+ - task: PowerShell@1
+  displayName: 'Build cake with target $(buildTarget)'
+  inputs:
+    scriptName: build.ps1
+    arguments: '-Target $(buildTarget)'
+
 
 - task: NuGetCommand@2
   command: push
