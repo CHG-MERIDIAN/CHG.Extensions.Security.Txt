@@ -10,7 +10,7 @@ variables:
   buildTarget: 'Test'
 
 steps:
- - task: PowerShell@1
+- task: PowerShell@1
   displayName: 'Build cake with target $(buildTarget)'
   inputs:
     scriptName: build.ps1
