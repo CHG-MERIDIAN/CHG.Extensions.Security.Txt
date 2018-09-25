@@ -17,9 +17,11 @@ steps:
     arguments: '-Target $(buildTarget)'
 
 - task: NuGetCommand@2
-  command: push
-  packagesToPush: 'buildArtifacts/Nuget/*.nupkg'
-  nuGetFeedType: external
-  publishFeedCredentials: 'NuGet'
-  versioningScheme: byEnvVar
-  versionEnvVar: version
+  displayName: 'Push to Nuget.org'
+  inputs:
+    command: push
+    packagesToPush: 'buildArtifacts/Nuget/*.nupkg'
+    nuGetFeedType: external
+    publishFeedCredentials: 'NuGet'
+    versioningScheme: byEnvVar
+    versionEnvVar: version
