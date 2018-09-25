@@ -16,7 +16,6 @@ steps:
     scriptName: build.ps1
     arguments: '-Target $(buildTarget)'
 
-
 - task: NuGetCommand@2
   command: push
   packagesToPush: 'buildArtifacts/Nuget/*.nupkg'
