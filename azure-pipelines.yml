@@ -22,6 +22,6 @@ steps:
     command: push
     packagesToPush: 'buildArtifacts/Nuget/*.nupkg'
     nuGetFeedType: external
-    publishFeedCredentials: 'NuGet'
+    publishFeedCredentials: 'NugetOrgConnection'
     versioningScheme: byEnvVar
     versionEnvVar: version
