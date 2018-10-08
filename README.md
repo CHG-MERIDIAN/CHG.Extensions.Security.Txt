@@ -1,7 +1,7 @@
 # CHG.Extensions.Security.Txt
 
 [![Build status](https://ci.appveyor.com/api/projects/status/852syrpnhad01ghq?svg=true)](https://ci.appveyor.com/project/CHG-MERIDIAN/chg-extensions-security-txt)
-[![NuGet Version](http://img.shields.io/nuget/v/CHG.Extensions.Security.Txt.svg?style=flat)](https://www.nuget.org/packages/CHG.Extensions.Security.Txt/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![NuGet Version](http://img.shields.io/nuget/v/CHG.Extensions.Security.Txt.svg?style=flat)](https://www.nuget.org/packages/CHG.Extensions.Security.Txt/) [![License](https://img.shields.io/badge/license-APACHE-blue.svg)](LICENSE)
 
 Provides a middleware to represent the "security.txt" for ASP.NET Core applications. Security.txt is a proposed standard which allows websites to define security policies, more details see [https://securitytxt.org/](https://securitytxt.org/).
 
