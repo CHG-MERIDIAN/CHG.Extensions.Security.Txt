@@ -1,0 +1,6 @@
+commit-message-incrementing: Disabled
+ignore:
+  sha:
+    - 717e38f8897218bd5cee0446bc4c70423b3b56eb
+    - 51dcc960438b33b43af3dce00f17f0e94ad66925
+    - c0d27c0204080830655fb211ca367a378cf54cf8

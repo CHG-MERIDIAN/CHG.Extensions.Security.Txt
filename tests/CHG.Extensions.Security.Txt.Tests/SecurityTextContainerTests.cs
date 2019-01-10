@@ -144,6 +144,15 @@ namespace CHG.Extensions.Security.Txt.Tests
             }
 
             [Test]
+            public void Throws_No_Exception_For_Missing_Contact_When_Set_By_Text()
+            {
+				_container.Contact = null;
+				_container.Text = "Contact: mailto:test@example.com.au\r\n";
+                Action action = () => _container.Validate();
+                action.Should().NotThrow();
+            }
+
+            [Test]
             public void Throws_No_Exception_If_Contact_Is_Valid_Email_Address()
             {
                 _container.Contact = "mailto:security@example.com";
