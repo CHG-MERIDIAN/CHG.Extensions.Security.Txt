@@ -58,6 +58,10 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		public void Validate()
 		{
+			// Don't validate information set by text
+			if (!string.IsNullOrEmpty(Text))
+				return;
+
 			if (!string.IsNullOrEmpty(Contact))
 				ValidateContact();
 			else
