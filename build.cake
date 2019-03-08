@@ -56,31 +56,27 @@ Task("Clean")
 
 GitVersion versionInfo = null;
 Task("Version")
-  .Description("Retrieves the current version from the git repository")
-  .Does(() => {
+	.Description("Retrieves the current version from the git repository")
+	.Does(() => {
 		
-	versionInfo = GitVersion(new GitVersionSettings {
-		UpdateAssemblyInfo = false
+		versionInfo = GitVersion(new GitVersionSettings {
+			UpdateAssemblyInfo = false
+		});
+		
+		Information("Version: "+ versionInfo.FullSemVer);
 	});
-		
-	Information("Version: "+ versionInfo.FullSemVer);
-  });
 
 Task("Build")
 	.IsDependentOn("Clean")
 	.IsDependentOn("Version")
 	.Does(() => {
 		
-	var settings = new DotNetCoreBuildSettings
-	 {        
-		 Configuration = "Release",
-		
-		 ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.NuGetVersionV2 + " /p:SourceLinkCreate=true")
-	 };
+		var settings = new DotNetCoreBuildSettings {        
+			Configuration = "Release",		
+			ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.NuGetVersionV2 + " /p:SourceLinkCreate=true")
+		};
 
-	 DotNetCoreBuild(project, settings);
-		
-		
+		DotNetCoreBuild(project, settings);			
 	});
 
 Task("Test")
@@ -91,8 +87,7 @@ Task("Test")
 			Logger = "trx;logfilename=" + testResultsPath
 		};
 		
-		var coveletSettings = new CoverletSettings
-		{
+		var coveletSettings = new CoverletSettings {
 			CollectCoverage = true,
 			CoverletOutputFormat = CoverletOutputFormat.opencover,
 			CoverletOutputDirectory = outputDir,
@@ -105,7 +100,7 @@ Task("Test")
 Task("SonarBegin")
 	.WithCriteria(!isLocalBuild)
 	.Does(() => {
-		SonarBegin(new SonarBeginSettings{
+		SonarBegin(new SonarBeginSettings {
 			Key = sonarProjectKey,
 			Url = sonarUrl,
 			Organization = sonarOrganization,
@@ -114,15 +109,15 @@ Task("SonarBegin")
 			VsTestReportsPath = testResultsPath,
 			OpenCoverReportsPath = codeCoverageResultPath
 		});
-  });
+	});
 
 Task("SonarEnd")
 	.WithCriteria(!isLocalBuild)
 	.Does(() => {
-		SonarEnd(new SonarEndSettings{
+		SonarEnd(new SonarEndSettings {
 			Login = sonarLogin
 		});
-  });
+	});
 
 Task("Pack")
 	.IsDependentOn("Test")
@@ -152,9 +147,8 @@ Task("Publish")
 		NuGetPush(packages, new NuGetPushSettings {
 			Source = nugetPublishFeed,
 			ApiKey = nugetApiKey
+		});	
 	});
-	
-});
 	
 Task("Default")
 	.IsDependentOn("SonarBegin")
