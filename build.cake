@@ -18,7 +18,7 @@ var sonarUrl = "https://sonarcloud.io";
 var sonarOrganization = "chg-meridian";
 var sonarLogin = Argument("sonarLogin", "");
 var codeCoverageResultFile = "CodeCoverageResults.xml";
-var codeCoverageResultPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), codeCoverageResultFile)
+var codeCoverageResultPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), codeCoverageResultFile);
 var testResultsPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), "TestResults.xml");
 
 //////////////////////////////////////////////////////////////////////
@@ -73,7 +73,6 @@ Task("Test")
     .Does(() =>
     {
         var settings = new DotNetCoreTestSettings {
-			Configuration = configuration,
 			Logger = "trx;logfilename=" + testResultsPath
 		};
 		
