@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -15,8 +15,9 @@
     <PackageProjectUrl>https://github.com/CHG-MERIDIAN/CHG.Extensions.Security.Txt</PackageProjectUrl>
     <RepositoryUrl>https://github.com/CHG-MERIDIAN/CHG.Extensions.Security.Txt</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
-    <PackageLicenseUrl>https://github.com/CHG-MERIDIAN/CHG.Extensions.Security.Txt/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageId>CHG.Extensions.Security.Txt</PackageId>  
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageId>CHG.Extensions.Security.Txt</PackageId>
+		<ProjectGuid>{84FEB7F6-A851-4AB6-AA0C-010F23BC6804}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,7 +29,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.10.0.7896">
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="7.11.0.8083">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference> 

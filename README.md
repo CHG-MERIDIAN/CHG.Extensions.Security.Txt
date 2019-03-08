@@ -3,6 +3,13 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/852syrpnhad01ghq?svg=true)](https://ci.appveyor.com/project/CHG-MERIDIAN/chg-extensions-security-txt)
 [![NuGet Version](http://img.shields.io/nuget/v/CHG.Extensions.Security.Txt.svg?style=flat)](https://www.nuget.org/packages/CHG.Extensions.Security.Txt/) [![License](https://img.shields.io/badge/license-APACHE-blue.svg)](LICENSE)
 
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=security_rating)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=bugs)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=coverage)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
+
 Provides a middleware to represent the "security.txt" for ASP.NET Core applications. Security.txt is a proposed standard which allows websites to define security policies, more details see [https://securitytxt.org/](https://securitytxt.org/).
 
 The security.txt page will be shown under `/.well-known/security.txt`. Optionally, the url `/security.txt` will be redirected to the main url.
