@@ -4,7 +4,7 @@ image: Visual Studio 2017
 #  Build Script                   #
 #---------------------------------#
 build_script:
-  - ps: .\build.ps1 --sonarLogin=%sonartoken% --nugetApiKey=%nugetApiKey%
+  - ps: .\build.ps1 --sonarLogin=$env:sonartoken --nugetApiKey=$env:nugetApiKey
 
 # Tests
 test: off

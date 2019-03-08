@@ -33,6 +33,13 @@ var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
 // TASKS
 //////////////////////////////////////////////////////////////////////
 
+Setup(context =>
+{
+    Information($"Local build: {isLocalBuild}");
+	Information($"Master branch: {isMasterBranch}");
+	Information($"Pull request: {isPullRequest}");	
+});
+
 Task("Clean")
     .Description("Removes the output directory")
 	.Does(() => {
