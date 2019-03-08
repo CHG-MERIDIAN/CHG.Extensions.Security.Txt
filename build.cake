@@ -5,6 +5,10 @@
 #addin "nuget:?package=Cake.Sonar&version=1.1.18"
 
 var target = Argument("target", "Default");
+var sonarLogin = Argument("sonarLogin", "");
+var branch = Argument("branch", "");
+var pullRequestNumber = Argument("pullRequestNumber", "");
+var nugetApiKey = Argument("nugetApiKey", "");
 
 //////////////////////////////////////////////////////////////////////
 //    Build Variables
@@ -16,10 +20,14 @@ var outputDirNuget = outputDir+"NuGet/";
 var sonarProjectKey = "CHG-MERIDIAN_CHG.Extensions.Security.Txt";
 var sonarUrl = "https://sonarcloud.io";
 var sonarOrganization = "chg-meridian";
-var sonarLogin = Argument("sonarLogin", "");
 var codeCoverageResultFile = "CodeCoverageResults.xml";
 var codeCoverageResultPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), codeCoverageResultFile);
 var testResultsPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), "TestResults.xml");
+var nugetPublishFeed = "https://api.nuget.org/v3/index.json";
+
+var isLocalBuild = BuildSystem.IsLocalBuild;
+var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.AppVeyor.Environment.Repository.Branch);
+var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -89,7 +97,8 @@ Task("Test")
     });
 	
 Task("SonarBegin")
-  .Does(() => {
+	.WithCriteria(!isLocalBuild)
+	.Does(() => {
      SonarBegin(new SonarBeginSettings{
         Key = sonarProjectKey,
         Url = sonarUrl,
@@ -103,17 +112,16 @@ Task("SonarBegin")
   });
 
 Task("SonarEnd")
-  .Does(() => {
+	.WithCriteria(!isLocalBuild)
+	.Does(() => {
      SonarEnd(new SonarEndSettings{
         Login = sonarLogin
      });
   });
 
 Task("Pack")
-	.IsDependentOn("SonarBegin")
     .IsDependentOn("Test")
 	.IsDependentOn("Version")
-	.IsDependentOn("SonarEnd")
     .Does(() => {
         
 		var packSettings = new DotNetCorePackSettings
@@ -125,10 +133,29 @@ Task("Pack")
 		 
 		 DotNetCorePack(project, packSettings);			
     });
+	
+Task("Publish")
+	.WithCriteria(!isPullRequest && isMasterBranch)
+	.IsDependentOn("Pack")	
+	.Description("Pushes the created NuGet packages to nuget.org")  
+	.Does(() => {
+	
+		// Get the paths to the packages.
+		var packages = GetFiles(outputDirNuget + "*.nupkg");
 
+		// Push the package.
+		NuGetPush(packages, new NuGetPushSettings {
+			Source = nugetPublishFeed,
+			ApiKey = nugetApiKey
+	});
+ 	
+});
+	
 Task("Default")
 	.IsDependentOn("SonarBegin")
-    .IsDependentOn("Test")
-	.IsDependentOn("SonarEnd");
+    .IsDependentOn("Test")	
+	.IsDependentOn("SonarEnd")
+	.IsDependentOn("Pack")
+	.IsDependentOn("Publish");
 
 RunTarget(target);

@@ -1,21 +1,13 @@
 image: Visual Studio 2017
 
-environment:
-  sonartoken:
-    secure: rYEMGcfQFzZnWGTarLtQD0MDhxFHpOIQhmuKhvFQ9NQIJ3aqjIFqbHXviZtiMB+v
-
 #---------------------------------#
 #  Build Script                   #
 #---------------------------------#
 build_script:
-  - ps: .\build.ps1 -Target Default --sonarLogin=%sonartoken%
+  - ps: .\build.ps1 --sonarLogin=%sonartoken% --nugetApiKey=%nugetApiKey%
 
 # Tests
 test: off
-
-artifacts:
-- path: buildArtifacts\Nuget\*.nupkg
-  name: NuGet package
   
 skip_commits:
   files:
@@ -38,22 +30,3 @@ branches:
 #---------------------------------#
 cache:   
 - tools -> build.cake
-
-# here we are going to override common configuration
-for:
-# master branch- only when a new tag was pushed
--
-  branches:
-    only:
-      - master  
-  build_script:
-  - ps: .\build.ps1 -Target Pack --sonarLogin=%sonartoken%
-    on:
-      APPVEYOR_REPO_TAG: true
-  deploy:
-  - provider: NuGet
-    artifact: /NuGet/
-    api_key:
-      secure: pybRcci/MAriwLJ1paEYvUrK8vh61SG0T2bGwFA8k4ebYE/CaqoGRn9KsfvDd6zL
-    on:
-      APPVEYOR_REPO_TAG: true
