@@ -16,7 +16,8 @@
     <RepositoryUrl>https://github.com/CHG-MERIDIAN/CHG.Extensions.Security.Txt</RepositoryUrl>
     <RepositoryType>github</RepositoryType>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageId>CHG.Extensions.Security.Txt</PackageId>  
+    <PackageId>CHG.Extensions.Security.Txt</PackageId>
+		<ProjectGuid>{84FEB7F6-A851-4AB6-AA0C-010F23BC6804}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
