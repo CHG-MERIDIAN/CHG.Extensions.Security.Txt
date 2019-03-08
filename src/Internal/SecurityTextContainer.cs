@@ -25,29 +25,14 @@ namespace CHG.Extensions.Security.Txt.Internal
 			{
 				var builder = new StringBuilder();
 
-				if (!string.IsNullOrEmpty(Introduction))
-					builder.AppendLine(CreateComment(Introduction));
-
-				if (!string.IsNullOrEmpty(Contact))
-					builder.Append(ExtractMultiple("Contact: ", Contact));
-
-				if (!string.IsNullOrEmpty(Encryption))
-					builder.AppendLine($"Encryption: {Encryption}");
-
-				if (!string.IsNullOrEmpty(Signature))
-					builder.AppendLine($"Signature: {Signature}");
-
-				if (!string.IsNullOrEmpty(Policy))
-					builder.AppendLine($"Policy: {Policy}");
-
-				if (!string.IsNullOrEmpty(Acknowledgments))
-					builder.AppendLine($"Acknowledgments: {Acknowledgments}");
-
-				if (!string.IsNullOrEmpty(Hiring))
-					builder.AppendLine($"Hiring: {Hiring}");
-
-				if (!string.IsNullOrEmpty(Permission))
-					builder.AppendLine($"Permission: {Permission}");
+				AddIntroduction(builder);
+				AddContact(builder);
+				AddEncryption(builder);
+				AddSignature(builder);
+				AddPolicy(builder);
+				AddAcknowledgments(builder);
+				AddHiring(builder);
+				AddPermission(builder);
 
 				return builder.ToString().TrimEnd();
 			}
@@ -62,28 +47,61 @@ namespace CHG.Extensions.Security.Txt.Internal
 			if (!string.IsNullOrEmpty(Text))
 				return;
 
-			if (!string.IsNullOrEmpty(Contact))
-				ValidateContact();
-			else
-				throw new InvalidSecurityInformationException("The \"Contact: \" directive MUST always be present in a security.txt file.");
+			ValidateContact();			
+			ValidateAcknowledgments();
+			ValidateEncryption();
+			ValidateHiring();
+			ValidatePermission();
+			ValidatePolicy();
+			ValidateSignature();
+		}
 
-			if (!string.IsNullOrEmpty(Acknowledgments))
-				ValidateAcknowledgments();
-
-			if (!string.IsNullOrEmpty(Encryption))
-				ValidateEncryption();
-
-			if (!string.IsNullOrEmpty(Hiring))
-				ValidateHiring();
-
+		private void AddPermission(StringBuilder builder)
+		{
 			if (!string.IsNullOrEmpty(Permission))
-				ValidatePermission();
+				builder.AppendLine($"Permission: {Permission}");
+		}
 
+		private void AddHiring(StringBuilder builder)
+		{
+			if (!string.IsNullOrEmpty(Hiring))
+				builder.AppendLine($"Hiring: {Hiring}");
+		}
+
+		private void AddAcknowledgments(StringBuilder builder)
+		{
+			if (!string.IsNullOrEmpty(Acknowledgments))
+				builder.AppendLine($"Acknowledgments: {Acknowledgments}");
+		}
+
+		private void AddPolicy(StringBuilder builder)
+		{
 			if (!string.IsNullOrEmpty(Policy))
-				ValidatePolicy();
+				builder.AppendLine($"Policy: {Policy}");
+		}
 
+		private void AddSignature(StringBuilder builder)
+		{
 			if (!string.IsNullOrEmpty(Signature))
-				ValidateSignature();
+				builder.AppendLine($"Signature: {Signature}");
+		}
+
+		private void AddEncryption(StringBuilder builder)
+		{
+			if (!string.IsNullOrEmpty(Encryption))
+				builder.AppendLine($"Encryption: {Encryption}");
+		}
+
+		private void AddContact(StringBuilder builder)
+		{
+			if (!string.IsNullOrEmpty(Contact))
+				builder.Append(ExtractMultiple("Contact: ", Contact));
+		}
+
+		private void AddIntroduction(StringBuilder builder)
+		{
+			if (!string.IsNullOrEmpty(Introduction))
+				builder.AppendLine(CreateComment(Introduction));
 		}
 
 		/// <summary>
@@ -91,7 +109,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateAcknowledgments()
 		{
-			ValidateUrl(Acknowledgments, nameof(Acknowledgments));
+			if (!string.IsNullOrEmpty(Acknowledgments))
+				ValidateUrl(Acknowledgments, nameof(Acknowledgments));
 		}
 
 		/// <summary>
@@ -99,7 +118,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateEncryption()
 		{
-			ValidateUri(Encryption, nameof(Encryption));
+			if (!string.IsNullOrEmpty(Encryption))
+				ValidateUri(Encryption, nameof(Encryption));
 		}
 
 		/// <summary>
@@ -107,7 +127,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateHiring()
 		{
-			ValidateUri(Hiring, nameof(Hiring), UriSchemes.DefaultQuerySchemes);
+			if (!string.IsNullOrEmpty(Hiring))
+				ValidateUri(Hiring, nameof(Hiring), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -115,7 +136,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidatePolicy()
 		{
-			ValidateUri(Policy, nameof(Policy), UriSchemes.DefaultQuerySchemes);
+			if (!string.IsNullOrEmpty(Policy))
+				ValidateUri(Policy, nameof(Policy), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -123,7 +145,8 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateSignature()
 		{
-			ValidateUri(Signature, nameof(Signature), UriSchemes.DefaultQuerySchemes);
+			if (!string.IsNullOrEmpty(Signature))
+				ValidateUri(Signature, nameof(Signature), UriSchemes.DefaultQuerySchemes);
 		}
 
 		/// <summary>
@@ -131,7 +154,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidatePermission()
 		{
-			if (!string.Equals(Permission, "none", StringComparison.OrdinalIgnoreCase))
+			if (!string.IsNullOrEmpty(Permission) && !string.Equals(Permission, "none", StringComparison.OrdinalIgnoreCase))
 				throw new InvalidSecurityInformationException($"The value '{Permission}' for the {nameof(Permission)} field is invalid! This field MUST have a value which is REQUIRED to be set to the string \"none\". Other values MUST NOT be used.");
 		}
 
@@ -140,8 +163,15 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// </summary>
 		private void ValidateContact()
 		{
-			foreach (var value in Contact.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
-				ValidateContact(value);
+			if (!string.IsNullOrEmpty(Contact))
+			{
+				foreach (var value in Contact.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
+					ValidateContact(value);
+			}
+			else
+			{
+				throw new InvalidSecurityInformationException("The \"Contact: \" directive MUST always be present in a security.txt file.");
+			}
 		}
 
 		/// <summary>
