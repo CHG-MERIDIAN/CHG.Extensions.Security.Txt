@@ -1,4 +1,8 @@
-#tool "nuget:?package=GitVersion.CommandLine"
+#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1"
+
+#addin "nuget:?package=Cake.Coverlet&version=2.1.2"
+#addin "nuget:?package=Cake.Sonar&version=1.1.18"
 
 var target = Argument("target", "Default");
 
@@ -9,6 +13,13 @@ var solution = "./CHG.Extensions.Security.sln";
 var project = "./src/CHG.Extensions.Security.Txt.csproj";
 var outputDir = "./buildArtifacts/";
 var outputDirNuget = outputDir+"NuGet/";
+var sonarProjectKey = "CHG-MERIDIAN_CHG.Extensions.Security.Txt";
+var sonarUrl = "https://sonarcloud.io";
+var sonarOrganization = "chg-meridian";
+var sonarLogin = Argument("sonarLogin", "");
+var codeCoverageResultFile = "CodeCoverageResults.xml";
+var codeCoverageResultPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), codeCoverageResultFile)
+var testResultsPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), "TestResults.xml");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -61,16 +72,49 @@ Task("Test")
     .IsDependentOn("Build")
     .Does(() =>
     {
-        var projectFiles = GetFiles("./tests/**/*.csproj");
-        foreach(var file in projectFiles)
+        var settings = new DotNetCoreTestSettings {
+			Configuration = configuration,
+			Logger = "trx;logfilename=" + testResultsPath
+		};
+		
+		var coveletSettings = new CoverletSettings
         {
-            DotNetCoreTest(file.FullPath);
-        }
+            CollectCoverage = true,
+            CoverletOutputFormat = CoverletOutputFormat.opencover,
+            CoverletOutputDirectory = outputDir,
+            CoverletOutputName = codeCoverageResultFile,
+        };
+				
+        DotNetCoreTest("./tests/CHG.Extensions.Security.Txt.Tests", settings, coveletSettings);
+        
     });
+	
+Task("SonarBegin")
+  .Does(() => {
+     SonarBegin(new SonarBeginSettings{
+        Key = sonarProjectKey,
+        Url = sonarUrl,
+        Organization = sonarOrganization,
+        Login = sonarLogin,
+		UseCoreClr = true,
+		VsTestReportsPath = testResultsPath,
+		OpenCoverReportsPath = codeCoverageResultPath,
+        Verbose = true
+     });
+  });
+
+Task("SonarEnd")
+  .Does(() => {
+     SonarEnd(new SonarEndSettings{
+        Login = sonarLogin
+     });
+  });
 
 Task("Pack")
+	.IsDependentOn("SonarBegin")
     .IsDependentOn("Test")
 	.IsDependentOn("Version")
+	.IsDependentOn("SonarEnd")
     .Does(() => {
         
 		var packSettings = new DotNetCorePackSettings
@@ -84,6 +128,8 @@ Task("Pack")
     });
 
 Task("Default")
-    .IsDependentOn("Test");
+	.IsDependentOn("SonarBegin")
+    .IsDependentOn("Test")
+	.IsDependentOn("SonarEnd");
 
 RunTarget(target);

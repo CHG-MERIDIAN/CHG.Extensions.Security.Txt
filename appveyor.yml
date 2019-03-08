@@ -1,10 +1,14 @@
 image: Visual Studio 2017
 
+environment:
+  sonartoken:
+    secure: rYEMGcfQFzZnWGTarLtQD0MDhxFHpOIQhmuKhvFQ9NQIJ3aqjIFqbHXviZtiMB+v
+
 #---------------------------------#
 #  Build Script                   #
 #---------------------------------#
 build_script:
-  - ps: .\build.ps1 -Target Test
+  - ps: .\build.ps1 -Target Default --sonarLogin=%sonartoken%
 
 # Tests
 test: off
@@ -43,7 +47,7 @@ for:
     only:
       - master  
   build_script:
-  - ps: .\build.ps1 -Target Pack
+  - ps: .\build.ps1 -Target Pack --sonarLogin=%sonartoken%
   deploy:
   - provider: NuGet
     artifact: /NuGet/
