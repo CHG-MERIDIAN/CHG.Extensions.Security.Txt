@@ -35,13 +35,13 @@ var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
 
 Setup(context =>
 {
-    Information($"Local build: {isLocalBuild}");
+	Information($"Local build: {isLocalBuild}");
 	Information($"Master branch: {isMasterBranch}");
 	Information($"Pull request: {isPullRequest}");	
 });
 
 Task("Clean")
-    .Description("Removes the output directory")
+	.Description("Removes the output directory")
 	.Does(() => {
 	  
 	if (DirectoryExists(outputDir))
@@ -69,76 +69,75 @@ Task("Version")
 Task("Build")
 	.IsDependentOn("Clean")
 	.IsDependentOn("Version")
-    .Does(() => {
- 		
+	.Does(() => {
+		
 	var settings = new DotNetCoreBuildSettings
-     {        
-         Configuration = "Release",
-        
+	 {        
+		 Configuration = "Release",
+		
 		 ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.NuGetVersionV2 + " /p:SourceLinkCreate=true")
-     };
+	 };
 
-     DotNetCoreBuild(project, settings);
+	 DotNetCoreBuild(project, settings);
 		
 		
-    });
+	});
 
 Task("Test")
-    .IsDependentOn("Build")
-    .Does(() =>
-    {
-        var settings = new DotNetCoreTestSettings {
+	.IsDependentOn("Build")
+	.Does(() =>
+	{
+		var settings = new DotNetCoreTestSettings {
 			Logger = "trx;logfilename=" + testResultsPath
 		};
 		
 		var coveletSettings = new CoverletSettings
-        {
-            CollectCoverage = true,
-            CoverletOutputFormat = CoverletOutputFormat.opencover,
-            CoverletOutputDirectory = outputDir,
-            CoverletOutputName = codeCoverageResultFile,
-        };
+		{
+			CollectCoverage = true,
+			CoverletOutputFormat = CoverletOutputFormat.opencover,
+			CoverletOutputDirectory = outputDir,
+			CoverletOutputName = codeCoverageResultFile,
+		};
 				
-        DotNetCoreTest("./tests/CHG.Extensions.Security.Txt.Tests", settings, coveletSettings);
-        
-    });
+		DotNetCoreTest("./tests/CHG.Extensions.Security.Txt.Tests", settings, coveletSettings);		
+	});
 	
 Task("SonarBegin")
 	.WithCriteria(!isLocalBuild)
 	.Does(() => {
-     SonarBegin(new SonarBeginSettings{
-        Key = sonarProjectKey,
-        Url = sonarUrl,
-        Organization = sonarOrganization,
-        Login = sonarLogin,
-		UseCoreClr = true,
-		VsTestReportsPath = testResultsPath,
-		OpenCoverReportsPath = codeCoverageResultPath
-     });
+		SonarBegin(new SonarBeginSettings{
+			Key = sonarProjectKey,
+			Url = sonarUrl,
+			Organization = sonarOrganization,
+			Login = sonarLogin,
+			UseCoreClr = true,
+			VsTestReportsPath = testResultsPath,
+			OpenCoverReportsPath = codeCoverageResultPath
+		});
   });
 
 Task("SonarEnd")
 	.WithCriteria(!isLocalBuild)
 	.Does(() => {
-     SonarEnd(new SonarEndSettings{
-        Login = sonarLogin
-     });
+		SonarEnd(new SonarEndSettings{
+			Login = sonarLogin
+		});
   });
 
 Task("Pack")
-    .IsDependentOn("Test")
+	.IsDependentOn("Test")
 	.IsDependentOn("Version")
-    .Does(() => {
-        
+	.Does(() => {
+		
 		var packSettings = new DotNetCorePackSettings
-		 {			
-			 Configuration = "Release",
-			 OutputDirectory = outputDirNuget,
-			 ArgumentCustomization = args => args.Append("/p:PackageVersion=" + versionInfo.NuGetVersionV2+ " /p:SourceLinkCreate=true")
-		 };
+		{			
+			Configuration = "Release",
+			OutputDirectory = outputDirNuget,
+			ArgumentCustomization = args => args.Append("/p:PackageVersion=" + versionInfo.NuGetVersionV2+ " /p:SourceLinkCreate=true")
+		};
 		 
-		 DotNetCorePack(project, packSettings);			
-    });
+		DotNetCorePack(project, packSettings);			
+	});
 	
 Task("Publish")
 	.WithCriteria(!isPullRequest && isMasterBranch)
@@ -154,12 +153,12 @@ Task("Publish")
 			Source = nugetPublishFeed,
 			ApiKey = nugetApiKey
 	});
- 	
+	
 });
 	
 Task("Default")
 	.IsDependentOn("SonarBegin")
-    .IsDependentOn("Test")	
+	.IsDependentOn("Test")	
 	.IsDependentOn("SonarEnd")
 	.IsDependentOn("Pack")
 	.IsDependentOn("Publish");

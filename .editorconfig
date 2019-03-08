@@ -5,7 +5,6 @@
 
 # Exceptions to the .NET Foundation team rules:
 #  - we use Tabs instead of Spaces because we don't do cross platform development
-#  - we allow VB to use types Int32 instead of keywords like Integer because of the CHG Coding Guidelines
 
 
 # top-most EditorConfig file
@@ -33,6 +32,10 @@ indent_size = 2
 
 # JSON files
 [*.json]
+indent_size = 2
+
+# CAKE files
+[*.cake]
 indent_size = 2
 
 # Dotnet code style settings:
@@ -120,11 +123,6 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_statements = false
 #csharp_prefer_braces = true:suggestion
 
-# Visual Basic code style settings:
-[*.vb]
-# Use language keywords instead of framework type names for type references
-dotnet_style_predefined_type_for_locals_parameters_members = false
-dotnet_style_predefined_type_for_member_access = false
 
 [*.{cs,vb}]
 # Based on https://github.com/RehanSaeed/EditorConfig/blob/master/.editorconfig
