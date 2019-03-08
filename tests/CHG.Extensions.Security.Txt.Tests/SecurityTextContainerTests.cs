@@ -13,9 +13,11 @@ namespace CHG.Extensions.Security.Txt.Tests
         [SetUp]
         public void Setup()
         {
-            _container = new SecurityTextContainer();
-            _container.Contact = "mailto:test@test.com";
-        }
+			_container = new SecurityTextContainer
+			{
+				Contact = "mailto:test@test.com"
+			};
+		}
 
         public class ValidateValuesProperty : SecurityTextContainerTests
         {
