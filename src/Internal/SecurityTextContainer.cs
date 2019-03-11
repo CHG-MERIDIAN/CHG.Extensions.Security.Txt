@@ -47,7 +47,7 @@ namespace CHG.Extensions.Security.Txt.Internal
 			if (!string.IsNullOrEmpty(Text))
 				return;
 
-			ValidateContact();			
+			ValidateContact();
 			ValidateAcknowledgments();
 			ValidateEncryption();
 			ValidateHiring();
@@ -59,49 +59,49 @@ namespace CHG.Extensions.Security.Txt.Internal
 		private void AddPermission(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Permission))
-				builder.AppendLine($"Permission: {Permission}");
+				AppendLine(builder, $"Permission: {Permission}");
 		}
 
 		private void AddHiring(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Hiring))
-				builder.AppendLine($"Hiring: {Hiring}");
+				AppendLine(builder, $"Hiring: {Hiring}");
 		}
 
 		private void AddAcknowledgments(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Acknowledgments))
-				builder.AppendLine($"Acknowledgments: {Acknowledgments}");
+				AppendLine(builder, $"Acknowledgments: {Acknowledgments}");
 		}
 
 		private void AddPolicy(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Policy))
-				builder.AppendLine($"Policy: {Policy}");
+				AppendLine(builder, $"Policy: {Policy}");
 		}
 
 		private void AddSignature(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Signature))
-				builder.AppendLine($"Signature: {Signature}");
+				AppendLine(builder, $"Signature: {Signature}");
 		}
 
 		private void AddEncryption(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Encryption))
-				builder.AppendLine($"Encryption: {Encryption}");
+				AppendLine(builder, $"Encryption: {Encryption}");
 		}
 
 		private void AddContact(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Contact))
-				builder.Append(ExtractMultiple("Contact: ", Contact));
+				builder.Append(ExtractMultiple("Contact: ", Contact, NewLineString));
 		}
 
 		private void AddIntroduction(StringBuilder builder)
 		{
 			if (!string.IsNullOrEmpty(Introduction))
-				builder.AppendLine(CreateComment(Introduction));
+				AppendLine(builder, CreateComment(Introduction));
 		}
 
 		/// <summary>
@@ -254,32 +254,41 @@ namespace CHG.Extensions.Security.Txt.Internal
 			}
 		}
 
+		private string CreateComment(string value)
+		{
+			return CreateComment(value, NewLineString);
+		}
+
 		/// <summary>
 		/// Creates a comment from the given value.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		internal static string CreateComment(string value)
+		internal static string CreateComment(string value, string newLineString)
 		{
 			if (string.IsNullOrEmpty(value))
 				return string.Empty;
 
 			return COMMENT_PREFIX +
-				value.Replace("\r\n", "~~")
-				.Replace("\r", "~~")
-				.Replace("\n", "~~")
-				.Replace("~~", Environment.NewLine + COMMENT_PREFIX);
+				value.Replace("\r\n", "\n")
+				.Replace("\r", "\n")
+				.Replace("\n", newLineString + COMMENT_PREFIX);
 		}
 
-		private static string ExtractMultiple(string directive, string value)
+		private static string ExtractMultiple(string directive, string value, string newLineString)
 		{
 			var values = value.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
 			var builder = new StringBuilder();
 
 			foreach (var item in values)
-				builder.AppendLine($"{directive}{item}");
+				builder.Append($"{directive}{item}").Append(newLineString);
 
 			return builder.ToString();
+		}
+
+		private void AppendLine(StringBuilder builder, string value)
+		{
+			builder.Append(value).Append(NewLineString);
 		}
 
 		/// <summary>
@@ -339,6 +348,11 @@ namespace CHG.Extensions.Security.Txt.Internal
 		/// Gets or sets whether the values should be validated
 		/// </summary>
 		public bool ValidateValues { get; set; } = true;
+
+		/// <summary>
+		/// Gets or sets the string to define a new line
+		/// </summary>
+		public string NewLineString { get; set; } = Environment.NewLine;
 
 	}
 }

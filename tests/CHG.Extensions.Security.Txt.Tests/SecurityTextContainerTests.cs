@@ -45,10 +45,12 @@ namespace CHG.Extensions.Security.Txt.Tests
                 _container.Build().Should().Be("Test\n123");
             }
 
-            [Test]
-            public void Returns_Security_Infos()
+            [TestCase("\n")]
+			[TestCase("\r\n")]
+			public void Returns_Security_Infos(string newLineStyle)
             {
-                _container.Contact = "mailto:security@example.com";
+				_container.NewLineString = newLineStyle;
+				_container.Contact = "mailto:security@example.com";
                 _container.Encryption = "https://example.com/pgp-key.txt";
                 _container.Hiring = "https://example.com/jobs.html";
                 _container.Acknowledgments = "https://example.com/hall-of-fame.html";
@@ -57,13 +59,13 @@ namespace CHG.Extensions.Security.Txt.Tests
                 _container.Introduction = "The ACME Security information.";
                 _container.Permission = "none";
 
-                _container.Build().Should().Be("# The ACME Security information." + Environment.NewLine +
-"Contact: mailto:security@example.com" + Environment.NewLine +
-"Encryption: https://example.com/pgp-key.txt" + Environment.NewLine +
-"Signature: https://example.com/.well-known/security.txt.sig" + Environment.NewLine +
-"Policy: https://example.com/security-policy.html" + Environment.NewLine +
-"Acknowledgments: https://example.com/hall-of-fame.html" + Environment.NewLine +
-"Hiring: https://example.com/jobs.html" + Environment.NewLine +
+                _container.Build().Should().Be("# The ACME Security information." + newLineStyle +
+"Contact: mailto:security@example.com" + newLineStyle +
+"Encryption: https://example.com/pgp-key.txt" + newLineStyle +
+"Signature: https://example.com/.well-known/security.txt.sig" + newLineStyle +
+"Policy: https://example.com/security-policy.html" + newLineStyle +
+"Acknowledgments: https://example.com/hall-of-fame.html" + newLineStyle +
+"Hiring: https://example.com/jobs.html" + newLineStyle +
 "Permission: none");
             }
         }
@@ -73,27 +75,33 @@ namespace CHG.Extensions.Security.Txt.Tests
             [Test]
             public void Returns_Empty_For_EmptyValue()
             {
-                SecurityTextContainer.CreateComment("").Should().BeEmpty();
+                SecurityTextContainer.CreateComment("", Environment.NewLine).Should().BeEmpty();
             }
 
             [Test]
             public void Returns_Empty_For_Null_Value()
             {
-                SecurityTextContainer.CreateComment(null).Should().BeEmpty();
+                SecurityTextContainer.CreateComment(null, Environment.NewLine).Should().BeEmpty();
             }
 
             [Test]
             public void Returns_Single_Line()
             {
-                SecurityTextContainer.CreateComment("test").Should().Be("# test");
+                SecurityTextContainer.CreateComment("test", Environment.NewLine).Should().Be("# test");
             }
 
             [Test]
             public void Returns_Multiline_With_Prefix()
             {
-                SecurityTextContainer.CreateComment("test\r\nother line").Should().Be("# test\r\n# other line");
+                SecurityTextContainer.CreateComment("test\r\nother line", Environment.NewLine).Should().Be("# test\r\n# other line");
             }
-        }
+
+			[Test]
+			public void Returns_Multiline_With_Prefix_With_Mixed_NewLine_Style()
+			{
+				SecurityTextContainer.CreateComment("test\r\nother line\nanother line", Environment.NewLine).Should().Be("# test\r\n# other line\r\n# another line");
+			}
+		}
 
         public class ValidateMethod : SecurityTextContainerTests
         {
