@@ -308,5 +308,25 @@ namespace CHG.Extensions.Security.Txt.Tests
                     .GetContainer().Build().Should().Be("# The ACME Security information.");
             }
         }
-    }
+
+		public class UseWindowsStyleNewLineMethod: SecurityTextBuilderTests
+		{
+			[Test]
+			public void Sets_Line_Style()
+			{
+				_builder.UseWindowsStyleNewLine()
+					.GetContainer().NewLineString.Should().Be("\r\n");
+			}
+		}
+
+		public class UseUnixStyleNewLineMethod : SecurityTextBuilderTests
+		{
+			[Test]
+			public void Sets_Line_Style()
+			{
+				_builder.UseUnixStyleNewLine()
+					.GetContainer().NewLineString.Should().Be("\n");
+			}
+		}
+	}
 }

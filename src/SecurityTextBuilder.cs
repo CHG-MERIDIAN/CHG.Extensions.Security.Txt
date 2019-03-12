@@ -213,12 +213,32 @@ namespace CHG.Extensions.Security.Txt
             _container.Introduction = value;
             return this;
         }
-        
-        /// <summary>
-        /// Builds the security information text
-        /// </summary>
-        /// <returns></returns>
-        public SecurityTextContainer GetContainer()
+
+		/// <summary>
+		/// Use Carriage Return And Line Feed (CR LF) as new line style
+		/// </summary>
+		/// <returns></returns>
+		public SecurityTextBuilder UseWindowsStyleNewLine()
+		{
+			_container.NewLineString = "\r\n";
+			return this;
+		}
+
+		/// <summary>
+		/// Use Line Feed (LF) as new line style
+		/// </summary>
+		/// <returns></returns>
+		public SecurityTextBuilder UseUnixStyleNewLine()
+		{
+			_container.NewLineString = "\n";
+			return this;
+		}
+
+		/// <summary>
+		/// Builds the security information text
+		/// </summary>
+		/// <returns></returns>
+		public SecurityTextContainer GetContainer()
         {
             return _container;
         }
