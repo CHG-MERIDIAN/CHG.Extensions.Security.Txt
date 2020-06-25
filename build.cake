@@ -1,13 +1,11 @@
-#tool "nuget:?package=GitVersion.CommandLine&version=4.0.0"
-#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1"
+#tool "nuget:?package=GitVersion.CommandLine&version=5.3.6"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.8.0"
 
-#addin "nuget:?package=Cake.Coverlet&version=2.1.2"
-#addin "nuget:?package=Cake.Sonar&version=1.1.18"
+#addin "nuget:?package=Cake.Coverlet&version=2.4.2"
+#addin "nuget:?package=Cake.Sonar&version=1.1.25"
 
 var target = Argument("target", "Default");
 var sonarLogin = Argument("sonarLogin", "");
-var branch = Argument("branch", "");
-var pullRequestNumber = Argument("pullRequestNumber", "");
 var nugetApiKey = Argument("nugetApiKey", "");
 
 //////////////////////////////////////////////////////////////////////
@@ -26,8 +24,8 @@ var testResultsPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDi
 var nugetPublishFeed = "https://api.nuget.org/v3/index.json";
 
 var isLocalBuild = BuildSystem.IsLocalBuild;
-var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.AppVeyor.Environment.Repository.Branch);
-var isPullRequest = BuildSystem.AppVeyor.Environment.PullRequest.IsPullRequest;
+var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.GitHubActions.Environment.Workflow.Ref);
+var isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -141,7 +139,7 @@ Task("Publish")
 	.Does(() => {
 	
 		// Get the paths to the packages.
-		var packages = GetFiles(outputDirNuget + "*.nupkg");
+		var packages = GetFiles(outputDirNuget + "*.*nupkg");
 
 		// Push the package.
 		NuGetPush(packages, new NuGetPushSettings {
@@ -155,6 +153,6 @@ Task("Default")
 	.IsDependentOn("Test")	
 	.IsDependentOn("SonarEnd")
 	.IsDependentOn("Pack")
-	.IsDependentOn("Publish");
+	.IsDependentOn("Publish");	
 
 RunTarget(target);
