@@ -36,3 +36,4 @@ jobs:
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}  
           SONAR_LOGIN: ${{ secrets.SONAR_LOGIN_SECURITYTXT }} 
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
