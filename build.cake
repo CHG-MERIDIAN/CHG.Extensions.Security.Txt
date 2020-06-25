@@ -24,7 +24,7 @@ var testResultsPath = System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDi
 var nugetPublishFeed = "https://api.nuget.org/v3/index.json";
 
 var isLocalBuild = BuildSystem.IsLocalBuild;
-var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.GitHubActions.Environment.Workflow.Ref);
+var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("refs/heads/master", BuildSystem.GitHubActions.Environment.Workflow.Ref);
 var isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
 var runSonar = !string.IsNullOrWhiteSpace(sonarLogin);
 
@@ -39,7 +39,6 @@ Setup(context =>
 	Information($"Pull request: {isPullRequest}");	
 	Information($"Run sonar: {runSonar}");
 	Information($"ref: {BuildSystem.GitHubActions.Environment.Workflow.Ref}");
-	Information($"wf: {BuildSystem.GitHubActions.Environment.Workflow}");
 });
 
 Task("Clean")
