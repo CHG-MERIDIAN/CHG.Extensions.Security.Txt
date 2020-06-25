@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build (and release)
 
 on:
   push:
@@ -12,15 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
-    - name: Cake Action
-      uses: cake-build/cake-action@v1.1.1
-      with:
-        # The verbosity level with which to run the script. Valid values are: Quiet, Minimal, Normal, Verbose or Diagnostic.
-        verbosity: Verbose
-        # The version of Cake to install.
-        cake-version: 0.38.0
+      - name: Get the sources
+        uses: actions/checkout@v2
+        
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+          
+      - name: Run Cake script
+        uses: cake-build/cake-action@v1.1.1
+        with:
+          verbosity: Verbose
+          cake-version: 0.38.2
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}  
+          SONAR_LOGIN: ${{ secrets.SONAR_LOGIN_SECURITYTXT }} 
