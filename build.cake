@@ -5,8 +5,8 @@
 #addin "nuget:?package=Cake.Sonar&version=1.1.25"
 
 var target = Argument("target", "Default");
-var sonarLogin = Argument("sonarLogin", "");
-var nugetApiKey = Argument("nugetApiKey", "");
+var sonarLogin = Argument("sonarLogin", EnvironmentVariable("SONAR_LOGIN") ?? "");
+var nugetApiKey = Argument("nugetApiKey", EnvironmentVariable("NUGET_API_KEY") ?? "");
 
 //////////////////////////////////////////////////////////////////////
 //    Build Variables
