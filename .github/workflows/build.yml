@@ -15,6 +15,9 @@ jobs:
       - name: Get the sources
         uses: actions/checkout@v2
         
+      - name: Fetch all history for all tags and branches
+        run: git fetch --prune --unshallow
+        
       - name: Setup .NET Core 2.1
         uses: actions/setup-dotnet@v1
         with:
