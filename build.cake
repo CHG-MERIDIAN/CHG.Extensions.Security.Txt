@@ -105,7 +105,8 @@ Task("SonarBegin")
 			Login = sonarLogin,
 			UseCoreClr = true,
 			VsTestReportsPath = testResultsPath,
-			OpenCoverReportsPath = codeCoverageResultPath
+			OpenCoverReportsPath = codeCoverageResultPath,
+			Verbose = true
 		});
 	});
 
