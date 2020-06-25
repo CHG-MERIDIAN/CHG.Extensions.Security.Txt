@@ -38,6 +38,8 @@ Setup(context =>
 	Information($"Master branch: {isMasterBranch}");
 	Information($"Pull request: {isPullRequest}");	
 	Information($"Run sonar: {runSonar}");
+	Information($"ref: {BuildSystem.GitHubActions.Environment.Workflow.Ref}");
+	Information($"wf: {BuildSystem.GitHubActions.Environment.Workflow}");
 });
 
 Task("Clean")
