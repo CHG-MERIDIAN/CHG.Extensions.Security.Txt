@@ -26,6 +26,7 @@ var nugetPublishFeed = "https://api.nuget.org/v3/index.json";
 var isLocalBuild = BuildSystem.IsLocalBuild;
 var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("master", BuildSystem.GitHubActions.Environment.Workflow.Ref);
 var isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
+var runSonar = !string.IsNullOrWhiteSpace(sonarLogin);
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -36,6 +37,7 @@ Setup(context =>
 	Information($"Local build: {isLocalBuild}");
 	Information($"Master branch: {isMasterBranch}");
 	Information($"Pull request: {isPullRequest}");	
+	Information($"Run sonar: {runSonar}");
 });
 
 Task("Clean")
@@ -96,7 +98,7 @@ Task("Test")
 	});
 	
 Task("SonarBegin")
-	.WithCriteria(!isLocalBuild)
+	.WithCriteria(runSonar)
 	.Does(() => {
 		SonarBegin(new SonarBeginSettings {
 			Key = sonarProjectKey,
@@ -110,7 +112,7 @@ Task("SonarBegin")
 	});
 
 Task("SonarEnd")
-	.WithCriteria(!isLocalBuild)
+	.WithCriteria(runSonar)
 	.Does(() => {
 		SonarEnd(new SonarEndSettings {
 			Login = sonarLogin
