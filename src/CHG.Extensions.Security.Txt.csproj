@@ -18,7 +18,15 @@
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageId>CHG.Extensions.Security.Txt</PackageId>
 		<ProjectGuid>{84FEB7F6-A851-4AB6-AA0C-010F23BC6804}</ProjectGuid>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
