@@ -1,6 +1,6 @@
 # CHG.Extensions.Security.Txt
 
-[![Build status](https://ci.appveyor.com/api/projects/status/852syrpnhad01ghq?svg=true)](https://ci.appveyor.com/project/CHG-MERIDIAN/chg-extensions-security-txt)
+![Build](https://github.com/CHG-MERIDIAN/CHG.Extensions.Security.Txt/workflows/Build%20(and%20release)/badge.svg?branch=master)
 [![NuGet Version](http://img.shields.io/nuget/v/CHG.Extensions.Security.Txt.svg?style=flat)](https://www.nuget.org/packages/CHG.Extensions.Security.Txt/) [![License](https://img.shields.io/badge/license-APACHE-blue.svg)](LICENSE)
 
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=CHG-MERIDIAN_CHG.Extensions.Security.Txt&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=CHG-MERIDIAN_CHG.Extensions.Security.Txt)
