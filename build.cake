@@ -151,7 +151,7 @@ Task("Publish")
 		});	
 
 		// Upload symbols
-		var packages = GetFiles(outputDirNuget + "*.snupkg");
+		packages = GetFiles(outputDirNuget + "*.snupkg");
 
 		// Push the package.
 		NuGetPush(packages, new NuGetPushSettings {
