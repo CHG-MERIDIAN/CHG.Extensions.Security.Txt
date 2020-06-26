@@ -142,7 +142,16 @@ Task("Publish")
 	.Does(() => {
 	
 		// Get the paths to the packages.
-		var packages = GetFiles(outputDirNuget + "*.*nupkg");
+		var packages = GetFiles(outputDirNuget + "*.nupkg");
+
+		// Push the package.
+		NuGetPush(packages, new NuGetPushSettings {
+			Source = nugetPublishFeed,
+			ApiKey = nugetApiKey
+		});	
+
+		// Upload symbols
+		var packages = GetFiles(outputDirNuget + "*.snupkg");
 
 		// Push the package.
 		NuGetPush(packages, new NuGetPushSettings {
