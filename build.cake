@@ -144,19 +144,11 @@ Task("Publish")
 		// Get the paths to the packages.
 		var packages = GetFiles(outputDirNuget + "*.nupkg");
 
-		// Push the package.
+		// Push the package and symbols
 		NuGetPush(packages, new NuGetPushSettings {
 			Source = nugetPublishFeed,
-			ApiKey = nugetApiKey
-		});	
-
-		// Upload symbols
-		packages = GetFiles(outputDirNuget + "*.snupkg");
-
-		// Push the package.
-		NuGetPush(packages, new NuGetPushSettings {
-			Source = nugetPublishFeed,
-			ApiKey = nugetApiKey
+			ApiKey = nugetApiKey,
+			SkipDuplicate = true
 		});	
 	});
 	
