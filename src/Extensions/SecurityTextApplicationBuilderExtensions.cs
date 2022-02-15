@@ -5,65 +5,77 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.Builder
 {
-    /// <summary>
-    /// Pipeline extension methods for adding SecurityText
-    /// </summary>
-    public static class SecurityTextApplicationBuilderExtensions
-    {
-        private const string MAIN_URL = "/.well-known/security.txt";
-        private const string FALLBACK_URL = "/security.txt";
+	/// <summary>
+	/// Pipeline extension methods for adding SecurityText
+	/// </summary>
+	public static class SecurityTextApplicationBuilderExtensions
+	{
+		private const string MAIN_URL = "/.well-known/security.txt";
+		private const string FALLBACK_URL = "/security.txt";
 
-        /// <summary>
-        /// Adds SecurityText to the pipeline.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseSecurityText(this IApplicationBuilder app)
-        {
-            return UseSecurityText(app, true);
-        }
+#if NET6_0_OR_GREATER
+		/// <summary>
+		/// Adds SecurityText to the pipeline.
+		/// </summary>
+		/// <param name="applicationBuilder">The web application builder</param>
+		public static AspNetCore.Builder.WebApplicationBuilder UseSecurityText(this AspNetCore.Builder.WebApplicationBuilder applicationBuilder)
+		{
+			UseSecurityText(applicationBuilder);
+			return applicationBuilder;
+		}
+#endif
 
-        /// <summary>
-        /// Adds SecurityText to the pipeline.
-        /// </summary>
-        /// <param name="app">The application.</param>
-        /// <param name="registerRedirect">True to redirect "/security.txt" to "/.well-known/security.txt"</param>
-        /// <returns></returns>
-        public static IApplicationBuilder UseSecurityText(this IApplicationBuilder app, bool registerRedirect)
-        {
-            if (app == null)
-                throw new ArgumentNullException(nameof(app));
+		/// <summary>
+		/// Adds SecurityText to the pipeline.
+		/// </summary>
+		/// <param name="app">The application.</param>
+		/// <returns></returns>
+		public static IApplicationBuilder UseSecurityText(this IApplicationBuilder app)
+		{
+			return UseSecurityText(app, true);
+		}
 
-            var container = app.ApplicationServices.GetService<SecurityTextContainer>();
+		/// <summary>
+		/// Adds SecurityText to the pipeline.
+		/// </summary>
+		/// <param name="app">The application.</param>
+		/// <param name="registerRedirect">True to redirect "/security.txt" to "/.well-known/security.txt"</param>
+		/// <returns></returns>
+		public static IApplicationBuilder UseSecurityText(this IApplicationBuilder app, bool registerRedirect)
+		{
+			if (app == null)
+				throw new ArgumentNullException(nameof(app));
 
-            if (container == null)
-                throw new InvalidOperationException($"Please call {nameof(SecurityTextServiceCollectionExtensions.AddSecurityText)}() within ConfigureServices() first, before using {nameof(UseSecurityText)}()!");
+			var container = app.ApplicationServices.GetService<SecurityTextContainer>();
 
-            if (container.ValidateValues)
-                container.Validate();
+			if (container == null)
+				throw new InvalidOperationException($"Please call {nameof(SecurityTextServiceCollectionExtensions.AddSecurityText)}() within ConfigureServices() first, before using {nameof(UseSecurityText)}()!");
 
-            app.Map(MAIN_URL, builder =>
+			if (container.ValidateValues)
+				container.Validate();
+
+			app.Map(MAIN_URL, builder =>
 			{
-                builder.Run(async context =>
+				builder.Run(async context =>
 				{
-                    context.Response.ContentType = "text/plain";
-                    await context.Response.WriteAsync(container.Build());
-                });
-            });
+					context.Response.ContentType = "text/plain";
+					await context.Response.WriteAsync(container.Build());
+				});
+			});
 
-            if (registerRedirect)
-            {
-                app.Map(FALLBACK_URL, builder =>
+			if (registerRedirect)
+			{
+				app.Map(FALLBACK_URL, builder =>
 				{
-                    builder.Run(async context =>
+					builder.Run(async context =>
 					{
-                        context.Response.Redirect(MAIN_URL, true);
-                        await context.Response.WriteAsync(container.Build());
-                    });
-                });
-            }
+						context.Response.Redirect(MAIN_URL, true);
+						await context.Response.WriteAsync(container.Build());
+					});
+				});
+			}
 
-            return app;
-        }
-    }
+			return app;
+		}
+	}
 }

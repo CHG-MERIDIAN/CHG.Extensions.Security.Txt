@@ -1,20 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
 		<ProjectGuid>{3FEF71C2-52D6-46D4-AC08-9752D8BD3B12}</ProjectGuid>
-  </PropertyGroup>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\CHG.Extensions.Security.Txt.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\CHG.Extensions.Security.Txt.csproj" />
+	</ItemGroup>
 
 </Project>
