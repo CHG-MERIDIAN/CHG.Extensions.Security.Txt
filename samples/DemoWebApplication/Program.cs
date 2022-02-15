@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddSecurityText(textBuilder => textBuilder.ReadFromFile(builder.Environment.WebRootFileProvider.GetFileInfo("companySecurityinfo.txt")));
