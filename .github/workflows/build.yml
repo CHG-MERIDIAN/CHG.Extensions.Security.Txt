@@ -18,15 +18,12 @@ jobs:
       - name: Fetch all history for all tags and branches
         run: git fetch --prune --unshallow
         
-      - name: Setup .NET Core 2.1
+      - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 2.1.807
-        
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 3.1.301
+          dotnet-version: |
+            3.1.x
+            6.0.x        
           
       - name: Setup Java JDK
         uses: actions/setup-java@v1.3.0
@@ -34,10 +31,9 @@ jobs:
           java-version: 11
           
       - name: Run Cake script
-        uses: cake-build/cake-action@v1.1.1
+        uses: cake-build/cake-action@v1
         with:
           verbosity: Verbose
-          cake-version: 0.38.2
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}  
           SONAR_LOGIN: ${{ secrets.SONAR_LOGIN_SECURITYTXT }} 
