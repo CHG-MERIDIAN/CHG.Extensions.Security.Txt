@@ -13,7 +13,7 @@ var nugetApiKey = Argument("nugetApiKey", EnvironmentVariable("NUGET_API_KEY") ?
 /////////////////////////////////////////////////////////////////////
 var solution = "./CHG.Extensions.Security.sln";
 var project = "./src/CHG.Extensions.Security.Txt.csproj";
-var outputDir = new DirectoryPath("./buildArtifacts/").MakeAbsolute(Context.Environment);
+var outputDir = MakeAbsolute(Directory("./buildArtifacts/"));
 var outputDirNuget = outputDir.Combine("NuGet");
 var sonarProjectKey = "CHG-MERIDIAN_CHG.Extensions.Security.Txt";
 var sonarUrl = "https://sonarcloud.io";
