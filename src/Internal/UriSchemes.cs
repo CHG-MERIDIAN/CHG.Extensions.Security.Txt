@@ -1,14 +1,12 @@
-﻿using System;
+﻿namespace CHG.Extensions.Security.Txt.Internal;
 
-namespace CHG.Extensions.Security.Txt.Internal
+internal static class UriSchemes
 {
-	internal static class UriSchemes
-	{
-		/// <summary>
-		/// Gets the default uri schemes to query information over a network
-		/// </summary>
-		/// <value>The default schemes to query information over a network.</value>
-		public static string[] DefaultQuerySchemes { get; } = new[] {
+	/// <summary>
+	/// Gets the default uri schemes to query information over a network
+	/// </summary>
+	/// <value>The default schemes to query information over a network.</value>
+	public static string[] DefaultQuerySchemes { get; } = new[] {
 			Uri.UriSchemeFile,
 			Uri.UriSchemeFtp,
 			Uri.UriSchemeGopher,
@@ -17,5 +15,4 @@ namespace CHG.Extensions.Security.Txt.Internal
 			Uri.UriSchemeNetPipe,
 			Uri.UriSchemeNetTcp
 		};
-	}
 }

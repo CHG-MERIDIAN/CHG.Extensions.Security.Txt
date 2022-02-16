@@ -244,3 +244,14 @@ dotnet_naming_rule.interface_types_must_be_prefixed_with_i.style = prefix_interf
 dotnet_naming_rule.namespaces_must_be_pasacl_case.severity = warning
 dotnet_naming_rule.namespaces_must_be_pasacl_case.symbols = namespaces
 dotnet_naming_rule.namespaces_must_be_pasacl_case.style = pascal_case
+
+# Namespaces
+csharp_style_namespace_declarations = file_scoped:warning
+
+################################################################
+# Analyzers
+################################################################
+dotnet_diagnostic.IDE0005.severity = warning      # Using directive is unnecessary 
+
+# because this call is not awaited, execution of the current method continues before the call is completed
+dotnet_diagnostic.CS4014.severity = error

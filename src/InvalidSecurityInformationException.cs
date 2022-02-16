@@ -1,28 +1,26 @@
-﻿using System;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
-namespace CHG.Extensions.Security.Txt
+namespace CHG.Extensions.Security.Txt;
+
+[Serializable]
+public class InvalidSecurityInformationException : Exception
 {
-	[Serializable]
-	public class InvalidSecurityInformationException : Exception
+	public InvalidSecurityInformationException()
 	{
-		public InvalidSecurityInformationException()
-		{
-		}
+	}
 
-		public InvalidSecurityInformationException(string message)
-			: base(message)
-		{
-		}
+	public InvalidSecurityInformationException(string message)
+		: base(message)
+	{
+	}
 
-		public InvalidSecurityInformationException(string message, Exception inner)
-			: base(message, inner)
-		{
-		}
+	public InvalidSecurityInformationException(string message, Exception inner)
+		: base(message, inner)
+	{
+	}
 
-		protected InvalidSecurityInformationException(SerializationInfo info, StreamingContext context)
-			: base(info, context)
-		{
-		}
+	protected InvalidSecurityInformationException(SerializationInfo info, StreamingContext context)
+		: base(info, context)
+	{
 	}
 }
