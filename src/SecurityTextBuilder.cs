@@ -213,6 +213,18 @@ public class SecurityTextBuilder
 	}
 
 	/// <summary>
+	/// Sets the value for the URI of a hosted security.txt to redirect to
+	/// </summary>
+	/// <param name="value">The redirect URI</param>
+	/// <returns></returns>
+	public SecurityTextBuilder SetRedirect(string value)
+	{
+		_container.RedirectUri = value;
+		_container.HasRedirect = true;
+		return this;
+	}
+
+	/// <summary>
 	/// Use Carriage Return And Line Feed (CR LF) as new line style
 	/// </summary>
 	/// <returns></returns>
