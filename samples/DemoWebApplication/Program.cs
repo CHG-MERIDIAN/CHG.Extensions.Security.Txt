@@ -26,3 +26,6 @@ var app = builder.Build();
 app.MapControllers();
 app.UseSecurityText();
 app.Run();
+
+// Exposes Program.cs to integration tests
+public partial class Program { }
