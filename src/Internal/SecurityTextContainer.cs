@@ -203,30 +203,30 @@ public class SecurityTextContainer
 	}
 
 	/// <summary>
-	/// Validates the redirect URI.
+	/// Validates the redirect URL.
 	/// </summary>
 	private void ValidateRedirect()
 	{
-		if (!string.IsNullOrEmpty(RedirectUri))
+		if (!string.IsNullOrEmpty(RedirectUrl))
 		{
-			ValidateUri(RedirectUri, nameof(RedirectUri), UriSchemes.DefaultQuerySchemes);
-			ValidateRedirectUri(RedirectUri);
+			ValidateUri(RedirectUrl, nameof(RedirectUrl), UriSchemes.DefaultQuerySchemes);
+			ValidateRedirectUrl(RedirectUrl);
 		}
 		else
 		{
-			throw new InvalidSecurityInformationException($"The {nameof(RedirectUri)} value must be configured if you are using .SetRedirect()");
+			throw new InvalidSecurityInformationException($"The {nameof(RedirectUrl)} value must be configured if you are using .SetRedirect()");
 		}	
 	}
 
-	private void ValidateRedirectUri(string redirectUri)
+	private void ValidateRedirectUrl(string redirectUrl)
 	{
-		bool isValidUri = Uri.TryCreate(redirectUri, UriKind.Absolute, out var validatedUri);
+		bool isValidUrl = Uri.TryCreate(redirectUrl, UriKind.Absolute, out var validatedUrl);
 
-		if (!isValidUri)
-			throw new InvalidSecurityInformationException($"The value '{redirectUri}' for the {nameof(RedirectUri)} field is not a valid url beginning with \"https://\"!");
+		if (!isValidUrl)
+			throw new InvalidSecurityInformationException($"The value '{redirectUrl}' for the {nameof(RedirectUrl)} field is not a valid url beginning with \"https://\"!");
 
-		if (!(validatedUri.AbsolutePath.StartsWith("/.well-known/security.txt") || validatedUri.AbsolutePath.StartsWith("/security.txt")))
-			throw new InvalidSecurityInformationException($"The value '{redirectUri}' for the {nameof(RedirectUri)} field is not a valid url with the path \"/.well-known/security.txt\" or \"/security.txt\"");
+		if (!(validatedUrl.AbsolutePath.StartsWith("/.well-known/security.txt") || validatedUrl.AbsolutePath.StartsWith("/security.txt")))
+			throw new InvalidSecurityInformationException($"The value '{redirectUrl}' for the {nameof(RedirectUrl)} field is not a valid url with the path \"/.well-known/security.txt\" or \"/security.txt\"");
 	}
 
 	private static void ValidateUri(string value, string fieldName, params string[] uriSchemeRestriction)
@@ -387,10 +387,10 @@ public class SecurityTextContainer
 	public string NewLineString { get; set; } = Environment.NewLine;
 
 	/// <summary>
-	/// Gets or sets the URI of a hosted security.txt to redirect to
+	/// Gets or sets the URL of a hosted security.txt to redirect to
 	/// </summary>
 	/// <example>https://securitytxt.org/.well-known/security.txt</example>
-	public string RedirectUri { get; set; }
+	public string RedirectUrl { get; set; }
 
 	/// <summary>
 	/// Gets or sets if we're redirecting to a hosted security.txt rather than building our own

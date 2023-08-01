@@ -189,6 +189,20 @@ public class SecurityTextBuilderTests
 			_builder.GetContainer().Build().Should().Be("# The ACME Security information.");
 		}
 
+		[Test]
+		public void Reads_Redirect_Information()
+		{
+			var config = CreateConfig("redirect", "https://example.com/.well-known/security.txt");
+
+			_builder.ReadFromConfiguration(config);
+
+			var container = _builder.GetContainer();
+
+			container.RedirectUrl.Should().Be("https://example.com/.well-known/security.txt");
+			container.HasRedirect.Should().BeTrue();
+		}
+
+
 		private static IConfigurationSection CreateConfig(string key, string value)
 		{
 			return new ConfigurationBuilder()
@@ -325,6 +339,19 @@ public class SecurityTextBuilderTests
 		{
 			_builder.UseUnixStyleNewLine()
 				.GetContainer().NewLineString.Should().Be("\n");
+		}
+	}
+
+	public class SetRedirectMethod : SecurityTextBuilderTests
+	{
+		[Test]
+		public void Set_Redirect_Value()
+		{
+			var container = _builder.SetRedirect("https://example.com/.well-known/security.txt")
+				.GetContainer();
+
+			container.RedirectUrl.Should().Be("https://example.com/.well-known/security.txt");
+			container.HasRedirect.Should().BeTrue();
 		}
 	}
 }

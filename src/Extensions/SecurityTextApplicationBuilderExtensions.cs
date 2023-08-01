@@ -47,7 +47,7 @@ public static class SecurityTextApplicationBuilderExtensions
 			{
 				if (container.HasRedirect)
 				{
-					context.Response.Redirect(container.RedirectUri, true);
+					context.Response.Redirect(container.RedirectUrl, true);
 				}
 				else
 				{
@@ -65,7 +65,7 @@ public static class SecurityTextApplicationBuilderExtensions
 				{
 					if (container.HasRedirect)
 					{
-						context.Response.Redirect(container.RedirectUri, true);
+						context.Response.Redirect(container.RedirectUrl, true);
 					}
 					else
 					{

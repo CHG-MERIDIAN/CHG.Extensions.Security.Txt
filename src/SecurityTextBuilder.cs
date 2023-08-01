@@ -84,6 +84,9 @@ public class SecurityTextBuilder
 				case "permission":
 					SetPermission(subKey.Value);
 					break;
+				case "redirect":
+					SetRedirect(subKey.Value);
+					break;
 				default:
 					break;
 			}
@@ -213,13 +216,13 @@ public class SecurityTextBuilder
 	}
 
 	/// <summary>
-	/// Sets the value for the URI of a hosted security.txt to redirect to
+	/// Sets the value for the	URL of a hosted security.txt to redirect to
 	/// </summary>
-	/// <param name="value">The redirect URI</param>
+	/// <param name="value">The redirect URL</param>
 	/// <returns></returns>
 	public SecurityTextBuilder SetRedirect(string value)
 	{
-		_container.RedirectUri = value;
+		_container.RedirectUrl = value;
 		_container.HasRedirect = true;
 		return this;
 	}
