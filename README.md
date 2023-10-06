@@ -89,6 +89,17 @@ The json configuration file should look like:
 
 ```
 
+or
+
+```json
+{
+  "SecurityText": {
+    "Redirect": "https://example.com/.well-known/security.txt"
+  }
+}
+
+```
+
 ### Using code to define values
 
 The fields can also be set via code:
@@ -100,6 +111,11 @@ public void ConfigureServices(IServiceCollection services)
     services.AddSecurityText(builder => { builder
         .SetContact("mailto:security@example.com")
         .SetPolicy("https://example.com/security-policy.html");
+    });
+
+    // or as a redirect
+    services.AddSecurityText(builder => { builder
+        .SetRedirect("https://example.com/.well-known/security.txt");
     });
 }
 ```

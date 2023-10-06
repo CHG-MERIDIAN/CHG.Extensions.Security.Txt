@@ -346,5 +346,41 @@ public class SecurityTextContainerTests
 			Action action = () => _container.Validate();
 			action.Should().Throw<InvalidSecurityInformationException>();
 		}
+
+		[Test]
+		public void Throws_Exception_If_RedirectUrl_Empty()
+		{
+			_container.RedirectUrl = string.Empty;
+			_container.HasRedirect = true;
+			Action action = () => _container.Validate();
+			action.Should().Throw<InvalidSecurityInformationException>();
+		}
+
+		[Test]
+		public void Throws_Exception_If_RedirectUrl_Is_Not_HTTPS()
+		{
+			_container.RedirectUrl = "http://example.com/.well-known/security.txt";
+			_container.HasRedirect = true;
+			Action action = () => _container.Validate();
+			action.Should().Throw<InvalidSecurityInformationException>();
+		}
+
+		[Test]
+		public void Throws_Exception_If_RedirectUrl_Is_Invalid()
+		{
+			_container.RedirectUrl = "ttt:sdfsdf";
+			_container.HasRedirect = true;
+			Action action = () => _container.Validate();
+			action.Should().Throw<InvalidSecurityInformationException>();
+		}
+
+		[Test]
+		public void Throws_Exception_If_RedirectUrl_Path_Is_Invalid()
+		{
+			_container.RedirectUrl = "http://example.com/other-path/security.txt";
+			_container.HasRedirect = true;
+			Action action = () => _container.Validate();
+			action.Should().Throw<InvalidSecurityInformationException>();
+		}
 	}
 }

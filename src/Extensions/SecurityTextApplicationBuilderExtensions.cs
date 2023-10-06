@@ -45,8 +45,15 @@ public static class SecurityTextApplicationBuilderExtensions
 		{
 			builder.Run(async context =>
 			{
-				context.Response.ContentType = "text/plain";
-				await context.Response.WriteAsync(container.Build());
+				if (container.HasRedirect)
+				{
+					context.Response.Redirect(container.RedirectUrl, true);
+				}
+				else
+				{
+					context.Response.ContentType = "text/plain";
+					await context.Response.WriteAsync(container.Build());
+				}
 			});
 		});
 
@@ -56,8 +63,15 @@ public static class SecurityTextApplicationBuilderExtensions
 			{
 				builder.Run(async context =>
 				{
-					context.Response.Redirect(MAIN_URL, true);
-					await context.Response.WriteAsync(container.Build());
+					if (container.HasRedirect)
+					{
+						context.Response.Redirect(container.RedirectUrl, true);
+					}
+					else
+					{
+						context.Response.Redirect(MAIN_URL, true);
+						await context.Response.WriteAsync(container.Build());
+					}
 				});
 			});
 		}

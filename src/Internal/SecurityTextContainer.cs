@@ -45,13 +45,20 @@ public class SecurityTextContainer
 		if (!string.IsNullOrEmpty(Text))
 			return;
 
-		ValidateContact();
-		ValidateAcknowledgments();
-		ValidateEncryption();
-		ValidateHiring();
-		ValidatePermission();
-		ValidatePolicy();
-		ValidateSignature();
+		if (HasRedirect)
+		{
+			ValidateRedirect();
+		}
+		else
+		{
+			ValidateContact();
+			ValidateAcknowledgments();
+			ValidateEncryption();
+			ValidateHiring();
+			ValidatePermission();
+			ValidatePolicy();
+			ValidateSignature();
+		}		
 	}
 
 	private void AddPermission(StringBuilder builder)
@@ -193,6 +200,33 @@ public class SecurityTextContainer
 		{
 			throw new InvalidSecurityInformationException($"The value '{value}' for the {nameof(Contact)} field is not a valid value. Please provide an url, email address or phone number.");
 		}
+	}
+
+	/// <summary>
+	/// Validates the redirect URL.
+	/// </summary>
+	private void ValidateRedirect()
+	{
+		if (!string.IsNullOrEmpty(RedirectUrl))
+		{
+			ValidateUri(RedirectUrl, nameof(RedirectUrl), UriSchemes.DefaultQuerySchemes);
+			ValidateRedirectUrl(RedirectUrl);
+		}
+		else
+		{
+			throw new InvalidSecurityInformationException($"The {nameof(RedirectUrl)} value must be configured if you are using .SetRedirect()");
+		}	
+	}
+
+	private void ValidateRedirectUrl(string redirectUrl)
+	{
+		bool isValidUrl = Uri.TryCreate(redirectUrl, UriKind.Absolute, out var validatedUrl);
+
+		if (!isValidUrl)
+			throw new InvalidSecurityInformationException($"The value '{redirectUrl}' for the {nameof(RedirectUrl)} field is not a valid url beginning with \"https://\"!");
+
+		if (!(validatedUrl.AbsolutePath.StartsWith("/.well-known/security.txt") || validatedUrl.AbsolutePath.StartsWith("/security.txt")))
+			throw new InvalidSecurityInformationException($"The value '{redirectUrl}' for the {nameof(RedirectUrl)} field is not a valid url with the path \"/.well-known/security.txt\" or \"/security.txt\"");
 	}
 
 	private static void ValidateUri(string value, string fieldName, params string[] uriSchemeRestriction)
@@ -351,5 +385,16 @@ public class SecurityTextContainer
 	/// Gets or sets the string to define a new line
 	/// </summary>
 	public string NewLineString { get; set; } = Environment.NewLine;
+
+	/// <summary>
+	/// Gets or sets the URL of a hosted security.txt to redirect to
+	/// </summary>
+	/// <example>https://securitytxt.org/.well-known/security.txt</example>
+	public string RedirectUrl { get; set; }
+
+	/// <summary>
+	/// Gets or sets if we're redirecting to a hosted security.txt rather than building our own
+	/// </summary>
+	public bool HasRedirect { get; set; }
 
 }
