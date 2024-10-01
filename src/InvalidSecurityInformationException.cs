@@ -1,8 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿namespace CHG.Extensions.Security.Txt;
 
-namespace CHG.Extensions.Security.Txt;
-
-[Serializable]
 public class InvalidSecurityInformationException : Exception
 {
 	public InvalidSecurityInformationException()
@@ -19,8 +16,4 @@ public class InvalidSecurityInformationException : Exception
 	{
 	}
 
-	protected InvalidSecurityInformationException(SerializationInfo info, StreamingContext context)
-		: base(info, context)
-	{
-	}
 }
