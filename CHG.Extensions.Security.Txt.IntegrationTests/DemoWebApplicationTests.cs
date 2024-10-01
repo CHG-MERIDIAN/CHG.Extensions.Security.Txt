@@ -1,5 +1,5 @@
-using NUnit.Framework;
 using FluentAssertions;
+using NUnit.Framework;
 
 namespace CHG.Extensions.Security.Txt.IntegrationTests;
 
@@ -18,6 +18,18 @@ public class DemoWebApplication
 	public void Setup()
 	{
 		_httpClient = _webApplicationFactory.CreateClient();
+	}
+
+	[OneTimeTearDown]
+	public void ClassTearDown()
+	{
+		_webApplicationFactory?.Dispose();
+	}
+
+	[TearDown]
+	public void TearDown()
+	{
+		_httpClient?.Dispose();
 	}
 
 	[Test]

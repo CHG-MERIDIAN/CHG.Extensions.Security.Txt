@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>netstandard2.0;net6.0;net7.0</TargetFrameworks>
+		<TargetFramework>net8.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Company>CHG-MERIDIAN AG</Company>
 		<Authors>Toni Wenzel</Authors>
@@ -20,31 +20,26 @@
 		<ProjectGuid>{84FEB7F6-A851-4AB6-AA0C-010F23BC6804}</ProjectGuid>
 		<IncludeSymbols>true</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' != 'netstandard2.0'">
+	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.1.1" />
-	</ItemGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="SonarAnalyzer.CSharp" Version="8.52.0.60960">
+		<PackageReference Include="SonarAnalyzer.CSharp" Version="9.32.0.97167">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="icon.png" Pack="true" Visible="false" PackagePath="" />
+		<None Include="icon.png" Pack="true" Visible="false" PackagePath="." />
+		<None Include="..\README.md" Pack="true" Visible="false" PackagePath="." />
 	</ItemGroup>
 </Project>
