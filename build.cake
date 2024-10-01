@@ -30,6 +30,8 @@ var nugetPublishFeed = "https://api.nuget.org/v3/index.json";
 var isLocalBuild = BuildSystem.IsLocalBuild;
 var isMasterBranch = StringComparer.OrdinalIgnoreCase.Equals("refs/heads/master", BuildSystem.GitHubActions.Environment.Workflow.Ref);
 var isPullRequest = BuildSystem.GitHubActions.Environment.PullRequest.IsPullRequest;
+var gitHubEvent = EnvironmentVariable("GITHUB_EVENT_NAME");
+var isReleaseCreation = string.Equals(gitHubEvent, "release");
 var runSonar = !string.IsNullOrWhiteSpace(sonarLogin);
 
 //////////////////////////////////////////////////////////////////////
@@ -43,6 +45,7 @@ Setup(context =>
     Information($"Pull request: {isPullRequest}");
     Information($"Run sonar: {runSonar}");
     Information($"ref: {BuildSystem.GitHubActions.Environment.Workflow.Ref}");
+    Information($"Is release creation: {isReleaseCreation}");
 });
 
 Task("Clean")
@@ -69,7 +72,23 @@ Task("Version")
             UpdateAssemblyInfo = false
         });
 
-        Information("Version: " + versionInfo.FullSemVer);
+        Information("Major:\t\t\t\t\t" + versionInfo.Major);
+        Information("Minor:\t\t\t\t\t" + versionInfo.Minor);
+        Information("Patch:\t\t\t\t\t" + versionInfo.Patch);
+        Information("MajorMinorPatch:\t\t\t" + versionInfo.MajorMinorPatch);
+        Information("SemVer:\t\t\t\t\t" + versionInfo.SemVer);
+        Information("LegacySemVer:\t\t\t\t" + versionInfo.LegacySemVer);
+        Information("LegacySemVerPadded:\t\t\t" + versionInfo.LegacySemVerPadded);
+        Information("AssemblySemVer:\t\t\t\t" + versionInfo.AssemblySemVer);
+        Information("FullSemVer:\t\t\t\t" + versionInfo.FullSemVer);
+        Information("InformationalVersion:\t\t\t" + versionInfo.InformationalVersion);
+        Information("BranchName:\t\t\t\t" + versionInfo.BranchName);
+        Information("Sha:\t\t\t\t\t" + versionInfo.Sha);
+        Information("NuGetVersionV2:\t\t\t\t" + versionInfo.NuGetVersionV2);
+        Information("NuGetVersion:\t\t\t\t" + versionInfo.NuGetVersion);
+        Information("CommitsSinceVersionSource:\t\t" + versionInfo.CommitsSinceVersionSource);
+        Information("CommitsSinceVersionSourcePadded:\t" + versionInfo.CommitsSinceVersionSourcePadded);
+        Information("CommitDate:\t\t\t\t" + versionInfo.CommitDate);
     });
 
 Task("Build")
@@ -139,8 +158,8 @@ Task("SonarEnd")
     });
 
 Task("Publish")
-    .WithCriteria(!isPullRequest && isMasterBranch)
-    .IsDependentOn("Test")
+     .WithCriteria(isReleaseCreation)
+     .IsDependentOn("Test")
     .IsDependentOn("Version")
     .Description("Pushes the created NuGet packages to nuget.org")
     .Does(() =>
