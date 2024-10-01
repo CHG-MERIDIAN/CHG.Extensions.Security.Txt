@@ -13,8 +13,9 @@ var nugetApiKey = Argument("nugetApiKey", EnvironmentVariable("NUGET_API_KEY") ?
 /////////////////////////////////////////////////////////////////////
 var solution = "./CHG.Extensions.Security.sln";
 var project = "./src/CHG.Extensions.Security.Txt.csproj";
-var outputDir = MakeAbsolute(Directory("./buildArtifacts/"));
-var outputDirNuget = outputDir.Combine("NuGet");
+var outputDir = Directory("./buildArtifacts/").Path.MakeAbsolute(Context.Environment);
+var outputDirPublished = outputDir.Combine("Published");
+var packageOutputDir = outputDirPublished.Combine("Package");
 var sonarProjectKey = "CHG-MERIDIAN_CHG.Extensions.Security.Txt";
 var sonarUrl = "https://sonarcloud.io";
 var sonarOrganization = "chg-meridian";
@@ -40,6 +41,7 @@ var runSonar = !string.IsNullOrWhiteSpace(sonarLogin);
 
 Setup(context =>
 {
+    Information($"Package output directory: {packageOutputDir.FullPath}");
     Information($"Local build: {isLocalBuild}");
     Information($"Master branch: {isMasterBranch}");
     Information($"Pull request: {isPullRequest}");
@@ -59,6 +61,7 @@ Task("Clean")
             Force = true
         });
         CreateDirectory(outputDir);
+        CreateDirectory(outputDirPublished);
     });
 
 GitVersion versionInfo = null;
@@ -102,7 +105,7 @@ Task("Build")
             Version = versionInfo.AssemblySemVer,
             InformationalVersion = versionInfo.InformationalVersion,
             PackageVersion = versionInfo.SemVer
-        }.WithProperty("PackageOutputPath", outputDirNuget.FullPath);
+        }.WithProperty("PackageOutputPath", packageOutputDir.FullPath);
 
         var settings = new DotNetBuildSettings
         {
@@ -167,8 +170,16 @@ Task("Publish")
     .Does(() =>
     {
 
-        // Get the paths to the packages.
-        var packages = GetFiles(outputDirNuget + "*.nupkg");
+        Information($"Upload packages from {packageOutputDir.FullPath}");
+
+        // Get the paths to the packages ordered by the file names in order to get the nupkg first.
+        var packages = GetFiles(packageOutputDir.CombineWithFilePath("*.*nupkg").ToString()).OrderBy(x => x.FullPath).ToArray();
+
+        if (packages.Length == 0)
+        {
+            Error("No packages found to upload");
+            return;
+        }
 
         // Push the package and symbols
         NuGetPush(packages, new NuGetPushSettings
