@@ -140,7 +140,7 @@ Task("SonarBegin")
             Key = sonarProjectKey,
             Url = sonarUrl,
             Organization = sonarOrganization,
-            Login = sonarLogin,
+            Token = sonarLogin,
             UseCoreClr = true,
             VsTestReportsPath = testResultsPath.ToString(),
             OpenCoverReportsPath = codeCoverageResultFilePath.ToString(),
@@ -155,7 +155,7 @@ Task("SonarEnd")
     {
         SonarEnd(new SonarEndSettings
         {
-            Login = sonarLogin
+            Token = sonarLogin
         });
     });
 
